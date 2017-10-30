@@ -53,7 +53,7 @@
 #define SHOW_DISABLED_TESTS
 
 // current measurement
-#define AMMETER
+//#define AMMETER
 
 // charging access control - if defined, enables RAPI G4/S4 commands
 //  to enable/disable charging function
@@ -62,7 +62,7 @@
 //#define AUTH_LOCK
 
 // serial remote api
-#define RAPI
+//#define RAPI
 
 // optional sequence id can be inserted as last parameter to commands/responses
 #define RAPI_SEQUENCE_ID
@@ -127,26 +127,26 @@
 #endif // OPENEVSE_2
 
 // GFI support
-#define GFI
+//#define GFI
 
 // If you loop a wire from the third GFI pin through the CT a few times and then to ground,
 // enable this. ADVPWR must also be defined.
-#define GFI_SELFTEST
+//#define GFI_SELFTEST
 
 // behavior specified by UL
 // 1) if enabled, POST failure will cause a hard fault until power cycled.
 //    disabled, will retry POST continuously until it passes
 // 2) if enabled, any a fault occurs immediately after charge is initiated,
 //    hard fault until power cycled. Otherwise, do the standard delay/retry sequence
-#define UL_COMPLIANT
+//#define UL_COMPLIANT
 // if enabled, do GFI self test before closing relay
-#define UL_GFI_SELFTEST
+//#define UL_GFI_SELFTEST
 
 #ifdef UL_GFI_SELFTEST
 #define GFI_SELFTEST
 #endif //UL_GFI_SELFTEST
 
-#define TEMPERATURE_MONITORING  // Temperature monitoring support
+//#define TEMPERATURE_MONITORING  // Temperature monitoring support
 // not yet #define TEMPERATURE_MONITORING_NY
 
 #ifdef AMMETER
@@ -160,7 +160,7 @@
 #endif //AMMETER
 
 //Adafruit RGBLCD (MCP23017) - can have RGB or monochrome backlight
-#define RGBLCD
+//#define RGBLCD
 
 //select default LCD backlight mode. can be overridden w/CLI/RAPI
 #define BKL_TYPE_MONO 0
@@ -169,10 +169,10 @@
 //#define DEFAULT_LCD_BKL_TYPE BKL_TYPE_MONO
 
 // Adafruit LCD backpack in I2C mode (MCP23008)
-//#define I2CLCD
+#define I2CLCD
 // Support PCF8574* based I2C backpack using F. Malpartida's library
 // https://bitbucket.org/fmalpartida/new-liquidcrystal/downloads
-//#define I2CLCD_PCF8574
+#define I2CLCD_PCF8574
 
 // Advanced Powersupply... Ground check, stuck relay, L1/L2 detection.
 #define ADVPWR
@@ -201,7 +201,7 @@
 
 // Option for RTC and DelayTime
 // REQUIRES HARDWARE RTC: DS1307 or DS3231 connected via I2C
-#define RTC // enable RTC & timer functions
+//#define RTC // enable RTC & timer functions
 
 #ifdef RTC
 // Option for Delay Timer - GoldServe
@@ -500,6 +500,10 @@
 #endif // GFI_TESTING
 #endif // GFI
 
+#define GFI_TIMEOUT ((unsigned long)(5*60000)) // 15*60*1000 doesn't work. go figure
+// number of times to retry tests before giving up. 255 = retry indefinitely
+#define GFI_RETRY_COUNT  6
+
 // for RGBLCD
 #define RED 0x1
 #define YELLOW 0x3
@@ -586,8 +590,8 @@
 
 #ifdef KWH_RECORDING
 #define VOLTS_FOR_L1 120       // conventional for North America
-//  #define VOLTS_FOR_L2 230   // conventional for most of the world
-#define VOLTS_FOR_L2 240       // conventional for North America
+#define VOLTS_FOR_L2 230   // conventional for most of the world
+//#define VOLTS_FOR_L2 240       // conventional for North America
 #endif // KWH_RECORDING
 
 // The maximum number of milliseconds to sample an ammeter pin in order to find three zero-crossings.
