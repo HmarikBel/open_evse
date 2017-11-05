@@ -398,7 +398,7 @@ void OnboardDisplay::Init()
 #endif
 
 #ifdef LCD16X2
-  LcdBegin(LCD_MAX_CHARS_PER_LINE, 2);
+  LcdBegin(LCD_MAX_CHARS_PER_LINE, 4);
   LcdSetBacklightColor(WHITE);
 
 #if defined(DELAYTIMER)||defined(TIME_LIMIT)

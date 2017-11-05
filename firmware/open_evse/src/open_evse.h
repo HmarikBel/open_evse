@@ -322,7 +322,7 @@
 // AN INFINITE RESET LOOP
 #define WATCHDOG_TIMEOUT WDTO_2S
 
-#define LCD_MAX_CHARS_PER_LINE 16
+#define LCD_MAX_CHARS_PER_LINE 20
 
 
 #ifdef SERIALCLI
@@ -519,7 +519,7 @@
 #include "./Wire.h"
 #ifdef I2CLCD_PCF8574
 #include "./LiquidCrystal_I2C.h"
-#define LCD_I2C_ADDR 0x27
+#define LCD_I2C_ADDR 0x3F //0x27
 #else
 #ifdef RGBLCD
 #define MCP23017 // Adafruit RGB LCD (PANELOLU2 is now supported without additional define)
