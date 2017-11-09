@@ -50,7 +50,7 @@
 #define AUTOSVCLEVEL
 
 // show disabled tests before POST
-#define SHOW_DISABLED_TESTS
+//#define SHOW_DISABLED_TESTS
 
 // current measurement
 //#define AMMETER
@@ -62,7 +62,7 @@
 //#define AUTH_LOCK
 
 // serial remote api
-//#define RAPI
+#define RAPI
 
 // optional sequence id can be inserted as last parameter to commands/responses
 #define RAPI_SEQUENCE_ID
@@ -684,7 +684,7 @@
 #endif // TEMPERATURE_MONITORING
 
 // how long to show each disabled test on LCD
-#define SHOW_DISABLED_DELAY 1500
+#define SHOW_DISABLED_DELAY 500
 
 //-- end configuration
 

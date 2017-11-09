@@ -17,6 +17,7 @@
  * Boston, MA 02111-1307, USA.
  */
 #include "open_evse.h"
+#include "CustomProcessing.h"
 
 #ifdef FT_ENDURANCE
 int g_CycleCnt = -1;
@@ -1471,6 +1472,7 @@ if (TempChkEnabled()) {
 #endif // FT_GFI_LOCKOUT
 
       chargingOn(); // turn on charging current
+	  CustomProcessing.reset();
     }
     else if (m_EvseState == EVSE_STATE_D) {
       // vent required not supported

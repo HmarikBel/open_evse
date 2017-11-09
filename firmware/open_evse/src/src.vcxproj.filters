@@ -87,6 +87,9 @@
     <ClInclude Include="Wire.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="CustomProcessing.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Adafruit_TMP007.cpp">
@@ -144,6 +147,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Wire.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CustomProcessing.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

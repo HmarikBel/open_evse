@@ -206,6 +206,13 @@ int EvseRapiProcessor::tokenize(char *buf)
   return rc;
 }
 
+void prinfIntToBuffer(char* buffer, int i)
+{
+	char temp[10];
+	sprintf(temp, "%d", i);
+//	strcpy(buffer, temp);
+}
+
 int EvseRapiProcessor::processCmd()
 {
   UNION4B u1,u2,u3,u4;
@@ -347,6 +354,7 @@ int EvseRapiProcessor::processCmd()
 	  u1.u8 = 0; // nosave = 0
 	}
 	rc = g_EvseController.SetCurrentCapacity(dtou32(tokens[1]),1,u1.u8);
+	prinfIntToBuffer(buffer, (int)g_EvseController.GetCurrentCapacity()); // compiller bug
 	sprintf(buffer,"%d",(int)g_EvseController.GetCurrentCapacity());
 	bufCnt = 1; // flag response text output
       }

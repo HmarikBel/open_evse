@@ -39,6 +39,7 @@
  * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
  * Boston, MA 02111-1307, USA.
  */
+
 #include <avr/io.h>
 #include <avr/eeprom.h>
 #include <avr/wdt.h>
@@ -47,6 +48,7 @@
 #include "./Wire.h"
 #include "./RTClib.h"
 #include "open_evse.h"
+#include "CustomProcessing.h"
 
 // if using I2CLCD_PCF8574 uncomment below line  and comment out LiquidTWI2.h above
 //#include "./LiquidCrystal_I2C.h"
@@ -2384,6 +2386,8 @@ void setup()
 
       g_WattHours_accumulated = eeprom_read_dword((uint32_t*)EOFS_KWH_ACCUMULATED);        // get the stored value for the kWh from eeprom
 #endif // KWH_RECORDING
+
+	CustomProcessing.init();
 }  // setup()
 
 
@@ -2396,6 +2400,8 @@ void loop()
   g_OBD.Update();
 
   ProcessInputs();
+
+  CustomProcessing.process();
 
   // Delay Timer Handler - GoldServe
 #ifdef DELAYTIMER
