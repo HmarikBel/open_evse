@@ -35,6 +35,8 @@ class CustomProcessingClass
 
 	byte m_currentParam;
 
+	bool m_readNext;
+
 	unsigned long m_prevProcessing;
 
  public:
@@ -47,7 +49,7 @@ class CustomProcessingClass
 	{
 		reset();
 
-		m_pzem.setReadTimeout(500);
+		m_pzem.setReadTimeout(60);
 	}
 
 	void init();
