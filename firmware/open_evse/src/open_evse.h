@@ -68,7 +68,7 @@
 #define RAPI_SEQUENCE_ID
 
 // add checksum to RAPI responses RAPI v2.0.0+
-#define RAPI_RESPONSE_CHK
+//#define RAPI_RESPONSE_CHK
 
 // RAPI over serial
 #define RAPI_SERIAL

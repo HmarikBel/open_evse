@@ -31,16 +31,17 @@ class CustomProcessingClass
 	IPAddress m_pzem_ip;
 	PZEM004T m_pzem;
 
-	int m_startE;
+	unsigned long m_startE;
 
 	byte m_currentParam;
 
 	bool m_readNext;
 
-	unsigned long m_prevProcessing;
+	long m_prevProcessing;
 
  public:
-	int m_e;
+	long m_eTotal;
+	long m_e;
 	int m_p;
 	float m_c;
 	int m_v;
@@ -49,7 +50,7 @@ class CustomProcessingClass
 	{
 		reset();
 
-		m_pzem.setReadTimeout(60);
+		m_pzem.setReadTimeout(70);
 	}
 
 	void init();

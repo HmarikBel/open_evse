@@ -19,6 +19,7 @@ void CustomProcessingClass::reset()
 	m_c = 0;
 	m_v = 0;
 	m_startE = 0;
+	m_eTotal = 0;
 	m_readNext = true;
 }
 
@@ -48,32 +49,32 @@ void CustomProcessingClass::process()
 				m_pzem.requestEnergy(m_pzem_ip);
 			}
 
-			int e = (int)m_pzem.readEnergy(m_pzem_ip);
+			m_eTotal = (long)m_pzem.readEnergy(m_pzem_ip);
 
-			m_readNext = e != PZEM_NOT_READY_VALUE;
+			m_readNext = m_eTotal != PZEM_NOT_READY_VALUE;
 			
-			if (e != PZEM_NOT_READY_VALUE)
+			if (m_eTotal != PZEM_NOT_READY_VALUE)
 			{
-				if (e > 0)
+				if (m_eTotal > 0)
 				{
 					if (m_startE == 0)
 					{
-						m_startE = e;
+						m_startE = m_eTotal;
 					}
 					else
 					{
-						m_e = e - m_startE;
+						m_e = m_eTotal - m_startE;
 					}
 				}
 				else
 				{
-					m_e = e;
+					m_e = m_eTotal;
 				}
 
 				g_OBD.LcdPrint_P(0, 2, g_psEnergy);
 				if (m_e >= 0)
 				{
-					sprintf(g_sTmp, "%5d", m_e);
+					sprintf(g_sTmp, "%5ld", m_e);
 					g_OBD.LcdPrint(2, 2, g_sTmp);
 				}
 				else
