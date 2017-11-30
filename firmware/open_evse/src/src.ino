@@ -401,6 +401,7 @@ void OnboardDisplay::Init()
 
 #ifdef LCD16X2
   LcdBegin(LCD_MAX_CHARS_PER_LINE, 4);
+//  LcdBegin(LCD_MAX_CHARS_PER_LINE, 2);
   LcdSetBacklightColor(WHITE);
 
 #if defined(DELAYTIMER)||defined(TIME_LIMIT)
@@ -1292,7 +1293,7 @@ void MaxCurrentMenu::Next()
     m_CurIdx ++;
   }
   else {
-    m_CurIdx += 2;
+    m_CurIdx += 4;
   }
   if (m_CurIdx > m_MaxCurrent) {
     m_CurIdx = m_MinCurrent;
@@ -2401,7 +2402,7 @@ void loop()
 
   ProcessInputs();
 
-  CustomProcessing.process();
+  //CustomProcessing.process();
 
   // Delay Timer Handler - GoldServe
 #ifdef DELAYTIMER

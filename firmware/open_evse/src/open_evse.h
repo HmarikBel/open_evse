@@ -65,7 +65,7 @@
 #define RAPI
 
 // optional sequence id can be inserted as last parameter to commands/responses
-#define RAPI_SEQUENCE_ID
+//#define RAPI_SEQUENCE_ID
 
 // add checksum to RAPI responses RAPI v2.0.0+
 //#define RAPI_RESPONSE_CHK
@@ -146,7 +146,7 @@
 #define GFI_SELFTEST
 #endif //UL_GFI_SELFTEST
 
-//#define TEMPERATURE_MONITORING  // Temperature monitoring support
+#define TEMPERATURE_MONITORING  // Temperature monitoring support
 // not yet #define TEMPERATURE_MONITORING_NY
 
 #ifdef AMMETER
@@ -322,7 +322,8 @@
 // AN INFINITE RESET LOOP
 #define WATCHDOG_TIMEOUT WDTO_2S
 
-#define LCD_MAX_CHARS_PER_LINE 20
+//#define LCD_MAX_CHARS_PER_LINE 20
+#define LCD_MAX_CHARS_PER_LINE 16
 
 
 #ifdef SERIALCLI
@@ -348,7 +349,7 @@
 
 // maximum allowable current in amps
 #define MAX_CURRENT_CAPACITY_L1 16 // J1772 Max for L1 on a 20A circuit = 16, 15A circuit = 12
-#define MAX_CURRENT_CAPACITY_L2 80 // J1772 Max for L2 = 80
+#define MAX_CURRENT_CAPACITY_L2 42 // J1772 Max for L2 = 80
 
 //J1772EVSEController
 #define CURRENT_PIN 0 // analog current reading pin ADCx
@@ -519,7 +520,9 @@
 #include "./Wire.h"
 #ifdef I2CLCD_PCF8574
 #include "./LiquidCrystal_I2C.h"
-#define LCD_I2C_ADDR 0x3F //0x27
+//#define LCD_I2C_ADDR 0x3F //0x27
+#define LCD_I2C_ADDR 0x27 //0x27
+
 #else
 #ifdef RGBLCD
 #define MCP23017 // Adafruit RGB LCD (PANELOLU2 is now supported without additional define)
@@ -605,9 +608,9 @@
 
 #ifdef TEMPERATURE_MONITORING
 
-#define MCP9808_IS_ON_I2C    // Use the MCP9808 connected to I2C
+//#define MCP9808_IS_ON_I2C    // Use the MCP9808 connected to I2C
 //#define TMP007_IS_ON_I2C     // Use the TMP007 IR sensor on I2C
-#define TEMPERATURE_DISPLAY_ALWAYS 0     // Set this flag to 1 to always show temperatures on the bottom line of the 16X2 LCD
+#define TEMPERATURE_DISPLAY_ALWAYS 1     // Set this flag to 1 to always show temperatures on the bottom line of the 16X2 LCD
                                          // Set to it 0 to only display when temperatures become elevated
 // #define TESTING_TEMPERATURE_OPERATION // Set this flag to play with very low sensor thresholds or to evaluate the code.
                                          // Leave it commented out instead to run with normal temperature thresholds.
@@ -1286,3 +1289,5 @@ extern TempMonitor g_TempMonitor;
 
 #include "strings.h"
 #include "rapi_proc.h"
+
+#include "CustomProcessing.h"

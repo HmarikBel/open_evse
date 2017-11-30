@@ -484,28 +484,32 @@ int EvseRapiProcessor::processCmd()
 
   case 'G': // get parameter
     switch(*s) {
-    case '0': // get EV connect state
-      {
-	uint8_t connstate;
-	if (g_EvseController.GetPilot()->GetState() == PILOT_STATE_N12) {
-	  connstate = 2; // unknown
-	}
-	else {
-	  if (g_EvseController.EvConnected()) connstate = 1;
-	  else connstate = 0;
-	}
-	sprintf(buffer,"%d",(int)connstate);
-      }
+    case '0':
+      	sprintf(buffer,"%ld",CustomProcessing.m_eTotal);
       bufCnt = 1; // flag response text output
       rc = 0;
       break;
-#ifdef TIME_LIMIT
-    case '3': // get time limit
-      sprintf(buffer,"%d",(int)g_EvseController.GetTimeLimit());
-      bufCnt = 1; // flag response text output
-      rc = 0;
-      break;
-#endif // TIME_LIMIT
+	case '1':
+		sprintf(buffer, "%ld", CustomProcessing.m_e);
+		bufCnt = 1; // flag response text output
+		rc = 0;
+		break;
+	case '2':
+		sprintf(buffer, "%d", CustomProcessing.m_p);
+		bufCnt = 1; // flag response text output
+		rc = 0;
+		break;
+	case '3':
+		sprintf(buffer, "%d", CustomProcessing.m_v);
+		bufCnt = 1; // flag response text output
+		rc = 0;
+		break;
+	case '4':
+		sprintf(buffer, "%d", (int)(CustomProcessing.m_c*10));
+		bufCnt = 1; // flag response text output
+		rc = 0;
+		break;
+
 #if defined(AUTH_LOCK) && !defined(AUTH_LOCK_REG)
     case '4': // get auth lock
       sprintf(buffer,"%d",(int)g_EvseController.AuthLockIsOn() ? 1 : 0);
