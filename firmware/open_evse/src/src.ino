@@ -783,6 +783,19 @@ void OnboardDisplay::Update(int8_t updmode)
     }
 #endif // AMMETER
 
+#ifdef TEMPERATURE_MONITORING
+	if (TEMPERATURE_DISPLAY_ALWAYS) {
+		//g_OBD.LcdClearLine(1);
+		const char *tempfmt = "%2d.%1dC";
+#ifdef DS18B20
+		if (CustomProcessing.m_temperature >= 0) {    // it returns 0 if it is not present
+			sprintf(g_sTmp, tempfmt, (int)CustomProcessing.m_temperature, ((int)(CustomProcessing.m_temperature * 10)) % 10);  //  Infrared sensor probably looking at 30A fuses
+			LcdPrint(11, 1, g_sTmp);
+		}
+	}
+#endif
+#endif
+
     if (curstate == EVSE_STATE_C) {
 #ifndef KWH_RECORDING
       time_t elapsedTime = g_EvseController.GetElapsedChargeTime();
@@ -814,7 +827,7 @@ void OnboardDisplay::Update(int8_t updmode)
 
 #ifdef TEMPERATURE_MONITORING
       if ((g_TempMonitor.OverTemperature()) || TEMPERATURE_DISPLAY_ALWAYS)  {
-	g_OBD.LcdClearLine(1);
+	//g_OBD.LcdClearLine(1);
 	const char *tempfmt = "%2d.%1dC";
 #ifdef MCP9808_IS_ON_I2C
 	if ( g_TempMonitor.m_MCP9808_temperature != 0 ) {   // it returns 0 if it is not present
@@ -859,7 +872,7 @@ void OnboardDisplay::Update(int8_t updmode)
 	LcdSetBacklightColor(TEAL);
 #endif
       }
-      if (!(g_TempMonitor.OverTemperature() || TEMPERATURE_DISPLAY_ALWAYS)) {
+      //if (!(g_TempMonitor.OverTemperature() || TEMPERATURE_DISPLAY_ALWAYS)) {
 #endif // TEMPERATURE_MONITORING
 #ifndef KWH_RECORDING
       int h = hour(elapsedTime);          // display the elapsed charge time
@@ -875,7 +888,7 @@ void OnboardDisplay::Update(int8_t updmode)
       LcdPrint(1,g_sTmp);
 #endif // KWH_RECORDING
 #ifdef TEMPERATURE_MONITORING
-      }
+      //}
 #endif // TEMPERATURE_MONITORING
     } // curstate == EVSE_STATE_C
     // Display a new stopped LCD screen with Delay Timers enabled - GoldServe
@@ -2402,7 +2415,7 @@ void loop()
 
   ProcessInputs();
 
-  //CustomProcessing.process();
+  CustomProcessing.process();
 
   // Delay Timer Handler - GoldServe
 #ifdef DELAYTIMER

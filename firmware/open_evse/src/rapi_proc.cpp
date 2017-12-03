@@ -505,7 +505,12 @@ int EvseRapiProcessor::processCmd()
 		rc = 0;
 		break;
 	case '4':
-		sprintf(buffer, "%d", (int)(CustomProcessing.m_c*10));
+		sprintf(buffer, "%d", (int)(CustomProcessing.m_c * 10));
+		bufCnt = 1; // flag response text output
+		rc = 0;
+		break;
+	case '5':
+		sprintf(buffer, "%d", (int)(CustomProcessing.m_temperature * 10));
 		bufCnt = 1; // flag response text output
 		rc = 0;
 		break;

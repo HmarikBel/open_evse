@@ -8,6 +8,9 @@
 void CustomProcessingClass::init()
 {
 	m_pzem.setAddress(m_pzem_ip);
+
+	m_temperatureSensorsReader.setResolution(m_insideThermometerAddr, 12);
+	m_temperatureSensorsReader.requestTemperatures();
 }
 
 void CustomProcessingClass::reset()
@@ -39,7 +42,9 @@ void CustomProcessingClass::process()
 		m_prevProcessing = millis();
 	}
 
-	int e;
+	readTemperature();
+
+	float readedValue;
 	switch (m_currentParam)
 	{
 		case 0: 
@@ -49,12 +54,13 @@ void CustomProcessingClass::process()
 				m_pzem.requestEnergy(m_pzem_ip);
 			}
 
-			m_eTotal = (long)m_pzem.readEnergy(m_pzem_ip);
+			readedValue = m_pzem.readEnergy(m_pzem_ip);
 
-			m_readNext = m_eTotal != PZEM_NOT_READY_VALUE;
+			m_readNext = readedValue != PZEM_NOT_READY_VALUE;
 			
-			if (m_eTotal != PZEM_NOT_READY_VALUE)
+			if (readedValue != PZEM_NOT_READY_VALUE)
 			{
+				m_eTotal = (long)readedValue;
 				if (m_eTotal > 0)
 				{
 					if (m_startE == 0)
@@ -91,12 +97,14 @@ void CustomProcessingClass::process()
 				m_pzem.requestPower(m_pzem_ip);
 			}
 
-			m_p = (int)m_pzem.readPower(m_pzem_ip);
+			readedValue = m_pzem.readPower(m_pzem_ip);
 
-			m_readNext = m_p != PZEM_NOT_READY_VALUE;
+			m_readNext = readedValue != PZEM_NOT_READY_VALUE;
 
-			if (m_p != PZEM_NOT_READY_VALUE)
+			if (readedValue != PZEM_NOT_READY_VALUE)
 			{
+				m_p = (int)readedValue;
+
 				g_OBD.LcdPrint_P(0, 3, g_psPower);
 				if (m_p >= 0)
 				{
@@ -116,23 +124,25 @@ void CustomProcessingClass::process()
 				m_pzem.requestVoltage(m_pzem_ip);
 			}
 
-			m_v = (int)m_pzem.readVoltage(m_pzem_ip);
+			readedValue = m_pzem.readVoltage(m_pzem_ip);
 
-			m_readNext = m_v != PZEM_NOT_READY_VALUE;
+			m_readNext = readedValue != PZEM_NOT_READY_VALUE;
 
-			if (m_v != PZEM_NOT_READY_VALUE)
+			if (readedValue != PZEM_NOT_READY_VALUE)
 			{
+				m_v = (int)readedValue;
+
 				g_OBD.LcdPrint_P(10, 2, g_psVoltage);
 				if (m_v >= 0)
 				{
 					sprintf(g_sTmp, "%4d", m_v);
-					g_OBD.LcdPrint(12, 2, g_sTmp);
+					g_OBD.LcdPrint(15, 2, g_sTmp);
 				}
 				else
 				{
-					g_OBD.LcdPrint_P(12, 2, g_psVoltageEmpty);
+					g_OBD.LcdPrint_P(15, 2, g_psVoltageEmpty);
 				}
-				g_OBD.LcdPrint_P(16, 2, g_psVoltageUnit);
+				g_OBD.LcdPrint_P(19, 2, g_psVoltageUnit);
 			}
 			break;
 		case 3: 
@@ -141,25 +151,27 @@ void CustomProcessingClass::process()
 				m_pzem.requestCurrent(m_pzem_ip);
 			}
 
-			m_c = m_pzem.readCurrent(m_pzem_ip);
+			readedValue = m_pzem.readCurrent(m_pzem_ip);
 
-			m_readNext = m_c != PZEM_NOT_READY_VALUE;
+			m_readNext = readedValue != PZEM_NOT_READY_VALUE;
 
-			if (m_c != PZEM_NOT_READY_VALUE)
+			if (readedValue != PZEM_NOT_READY_VALUE)
 			{
+				m_c = readedValue;
+
 				g_OBD.LcdPrint_P(10, 3, g_psCurrent);
 				if (m_c >= 0)
 				{
 					sprintf(g_sTmp, "%2d", (int)m_c);
-					g_OBD.LcdPrint(12, 3, g_sTmp);
-					sprintf(g_sTmp, "%01d", (int)((m_c - (int)m_c) * 100));
 					g_OBD.LcdPrint(15, 3, g_sTmp);
+					sprintf(g_sTmp, "%01d", (int)((m_c - (int)m_c) * 100));
+					g_OBD.LcdPrint(18, 3, g_sTmp);
 				}
 				else
 				{
-					g_OBD.LcdPrint_P(12, 3, g_psVoltageEmpty);
+					g_OBD.LcdPrint_P(15, 3, g_psVoltageEmpty);
 				}
-				g_OBD.LcdPrint_P(16, 3, g_psCurrentUnit);
+				g_OBD.LcdPrint_P(19, 3, g_psCurrentUnit);
 			}
 			break;
 	}
@@ -175,6 +187,15 @@ void CustomProcessingClass::process()
 	}
 }
 
+void CustomProcessingClass::readTemperature()
+{
+	m_temperature = m_temperatureSensorsReader.getTempC(m_insideThermometerAddr);
+	if (m_temperature == DEVICE_DISCONNECTED)
+	{
+		m_temperature = 0;
+	}
+	m_temperatureSensorsReader.requestTemperatures();
+}
 
 CustomProcessingClass CustomProcessing;
 

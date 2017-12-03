@@ -322,8 +322,8 @@
 // AN INFINITE RESET LOOP
 #define WATCHDOG_TIMEOUT WDTO_2S
 
-//#define LCD_MAX_CHARS_PER_LINE 20
-#define LCD_MAX_CHARS_PER_LINE 16
+#define LCD_MAX_CHARS_PER_LINE 20
+//#define LCD_MAX_CHARS_PER_LINE 16
 
 
 #ifdef SERIALCLI
@@ -520,8 +520,8 @@
 #include "./Wire.h"
 #ifdef I2CLCD_PCF8574
 #include "./LiquidCrystal_I2C.h"
-//#define LCD_I2C_ADDR 0x3F //0x27
-#define LCD_I2C_ADDR 0x27 //0x27
+#define LCD_I2C_ADDR 0x3F //0x27
+//#define LCD_I2C_ADDR 0x27 //0x27
 
 #else
 #ifdef RGBLCD
@@ -610,6 +610,8 @@
 
 //#define MCP9808_IS_ON_I2C    // Use the MCP9808 connected to I2C
 //#define TMP007_IS_ON_I2C     // Use the TMP007 IR sensor on I2C
+#define DS18B20     // UseDS18B20
+
 #define TEMPERATURE_DISPLAY_ALWAYS 1     // Set this flag to 1 to always show temperatures on the bottom line of the 16X2 LCD
                                          // Set to it 0 to only display when temperatures become elevated
 // #define TESTING_TEMPERATURE_OPERATION // Set this flag to play with very low sensor thresholds or to evaluate the code.
