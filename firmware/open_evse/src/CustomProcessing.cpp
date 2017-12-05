@@ -9,13 +9,14 @@ void CustomProcessingClass::init()
 {
 	m_pzem.setAddress(m_pzem_ip);
 
-	m_temperatureSensorsReader.setResolution(m_insideThermometerAddr, 12);
-	m_temperatureSensorsReader.requestTemperatures();
+	m_temperatureSensorsReader.setResolution(m_insideThermometerAddr, 11);
 }
 
 void CustomProcessingClass::reset()
 {
 	m_prevProcessing = 0;
+	m_prevReadTemperature = 0;
+	m_temperatureRequested = false;
 	m_currentParam = 0;
 	m_e = 0;
 	m_p = 0;
@@ -132,7 +133,7 @@ void CustomProcessingClass::process()
 			{
 				m_v = (int)readedValue;
 
-				g_OBD.LcdPrint_P(10, 2, g_psVoltage);
+				g_OBD.LcdPrint_P(12, 2, g_psVoltage);
 				if (m_v >= 0)
 				{
 					sprintf(g_sTmp, "%4d", m_v);
@@ -159,13 +160,11 @@ void CustomProcessingClass::process()
 			{
 				m_c = readedValue;
 
-				g_OBD.LcdPrint_P(10, 3, g_psCurrent);
+				g_OBD.LcdPrint_P(12, 3, g_psCurrent);
 				if (m_c >= 0)
 				{
-					sprintf(g_sTmp, "%2d", (int)m_c);
+					sprintf(g_sTmp, "%2d.%01d", (int)m_c, (int)((m_c - (int)m_c) * 100));
 					g_OBD.LcdPrint(15, 3, g_sTmp);
-					sprintf(g_sTmp, "%01d", (int)((m_c - (int)m_c) * 100));
-					g_OBD.LcdPrint(18, 3, g_sTmp);
 				}
 				else
 				{
@@ -189,12 +188,40 @@ void CustomProcessingClass::process()
 
 void CustomProcessingClass::readTemperature()
 {
-	m_temperature = m_temperatureSensorsReader.getTempC(m_insideThermometerAddr);
-	if (m_temperature == DEVICE_DISCONNECTED)
+	if (!m_temperatureRequested && millis() - m_prevReadTemperature < READ_TEMPERATURE_INTERVAL)
 	{
-		m_temperature = 0;
+		return;
 	}
-	m_temperatureSensorsReader.requestTemperatures();
+
+	if (!m_temperatureRequested)
+	{
+		if (millis() - m_prevReadTemperature < READ_TEMPERATURE_INTERVAL * 2)
+		{
+			m_prevReadTemperature += READ_TEMPERATURE_INTERVAL;
+		}
+		else
+		{
+			m_prevReadTemperature = millis();
+		}
+
+		m_temperatureSensorsReader.requestTemperatures();
+		m_temperatureRequested = true;
+	}
+	else
+	{
+		if (millis() - m_prevReadTemperature < WAIT_TEMPERATURE_INTERVAL)
+		{
+			return;
+		}
+
+		m_temperature = m_temperatureSensorsReader.getTempC(m_insideThermometerAddr);
+		if (m_temperature == DEVICE_DISCONNECTED)
+		{
+			m_temperature = 0;
+		}
+
+		m_temperatureRequested = false;
+	}
 }
 
 CustomProcessingClass CustomProcessing;

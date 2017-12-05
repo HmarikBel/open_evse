@@ -21,6 +21,9 @@
 
 #define PROCESS_INTERVAL 500
 
+#define READ_TEMPERATURE_INTERVAL 5000
+#define WAIT_TEMPERATURE_INTERVAL 400
+
 const char g_psEnergy[] PROGMEM = "E:";
 const char g_psEnergyEmpty[] PROGMEM = "-----";
 const char g_psEnergyUnit[] PROGMEM = "Wh";
@@ -29,7 +32,7 @@ const char g_psPowerUnit[] PROGMEM = "W";
 const char g_psVoltage[] PROGMEM = "V:";
 const char g_psVoltageUnit[] PROGMEM = "V";
 const char g_psVoltageEmpty[] PROGMEM = "----";
-const char g_psCurrent[] PROGMEM = "C:00.0";
+const char g_psCurrent[] PROGMEM = "C:";
 const char g_psCurrentUnit[] PROGMEM = "A";
 
 
@@ -53,7 +56,9 @@ class CustomProcessingClass
 
 	bool m_readNext;
 
-	long m_prevProcessing;
+	unsigned long m_prevProcessing;
+	unsigned long m_prevReadTemperature;
+	bool m_temperatureRequested;
 
  public:
 	long m_eTotal;

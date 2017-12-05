@@ -400,7 +400,7 @@ void OnboardDisplay::Init()
 #endif
 
 #ifdef LCD16X2
-  LcdBegin(LCD_MAX_CHARS_PER_LINE, 4);
+  LcdBegin(LCD_MAX_CHARS_PER_LINE, LCD_LINES);
 //  LcdBegin(LCD_MAX_CHARS_PER_LINE, 2);
   LcdSetBacklightColor(WHITE);
 
@@ -426,7 +426,12 @@ void OnboardDisplay::Init()
 #endif
   LcdPrint_P(0,1,PSTR("Ver. "));
   LcdPrint_P(VERSTR);
-  delay(1500);
+
+  if (LCD_LINES > 2)
+  {
+	  LcdPrint_P(0, 3, PSTR("Hmarik edition"));
+  }
+  delay(1000);
   WDT_RESET();
 #endif //#ifdef LCD16X2
 }
@@ -536,7 +541,7 @@ void OnboardDisplay::Update(int8_t updmode)
       g_DelayTimer.PrintTimerIcon();
 #endif //#ifdef DELAYTIMER
       LcdPrint_P(g_psReady);
-      LcdPrint(10,0,g_sTmp);
+      LcdPrint(LCD_MAX_CHARS_PER_LINE - 6, 0, g_sTmp);
 
 #ifdef KWH_RECORDING
       sprintf(g_sTmp,STRF_WH,(g_WattSeconds / 3600) );
@@ -616,6 +621,8 @@ void OnboardDisplay::Update(int8_t updmode)
       g_DelayTimer.PrintTimerIcon();
 #endif //#ifdef DELAYTIMER
       LcdPrint_P(g_psCharging);
+	  LcdPrint(LCD_MAX_CHARS_PER_LINE - 6, 0, g_sTmp);
+
 #endif //Adafruit RGB LCD
       // n.b. blue LED is on
       break;
@@ -783,19 +790,6 @@ void OnboardDisplay::Update(int8_t updmode)
     }
 #endif // AMMETER
 
-#ifdef TEMPERATURE_MONITORING
-	if (TEMPERATURE_DISPLAY_ALWAYS) {
-		//g_OBD.LcdClearLine(1);
-		const char *tempfmt = "%2d.%1dC";
-#ifdef DS18B20
-		if (CustomProcessing.m_temperature >= 0) {    // it returns 0 if it is not present
-			sprintf(g_sTmp, tempfmt, (int)CustomProcessing.m_temperature, ((int)(CustomProcessing.m_temperature * 10)) % 10);  //  Infrared sensor probably looking at 30A fuses
-			LcdPrint(11, 1, g_sTmp);
-		}
-	}
-#endif
-#endif
-
     if (curstate == EVSE_STATE_C) {
 #ifndef KWH_RECORDING
       time_t elapsedTime = g_EvseController.GetElapsedChargeTime();
@@ -891,6 +885,19 @@ void OnboardDisplay::Update(int8_t updmode)
       //}
 #endif // TEMPERATURE_MONITORING
     } // curstate == EVSE_STATE_C
+
+#ifdef TEMPERATURE_MONITORING
+	if (TEMPERATURE_DISPLAY_ALWAYS) {
+		const char *tempfmt = "%2d.%1dC";
+#ifdef DS18B20
+		if (CustomProcessing.m_temperature >= 0) {
+			sprintf(g_sTmp, tempfmt, (int)CustomProcessing.m_temperature, ((int)(CustomProcessing.m_temperature * 10)) % 10);
+			LcdPrint(LCD_MAX_CHARS_PER_LINE - 5, 1, g_sTmp);
+		}
+	}
+#endif
+#endif
+
     // Display a new stopped LCD screen with Delay Timers enabled - GoldServe
 #ifdef DELAYTIMER
     else if (curstate == EVSE_STATE_SLEEPING) {

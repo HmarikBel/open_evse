@@ -325,6 +325,8 @@
 #define LCD_MAX_CHARS_PER_LINE 20
 //#define LCD_MAX_CHARS_PER_LINE 16
 
+#define LCD_LINES 4
+
 
 #ifdef SERIALCLI
 #define TMP_BUF_SIZE 64
