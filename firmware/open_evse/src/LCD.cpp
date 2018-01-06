@@ -312,7 +312,7 @@ void LCD::noBacklight ( void )
 
 //
 // Switch fully on the LCD (backlight and LCD)
-void LCD::on ( void )
+/*void LCD::on ( void )
 {
    display();
    backlight();
@@ -324,7 +324,7 @@ void LCD::off ( void )
 {
    noBacklight();
    noDisplay();
-}
+}*/
 
 // General LCD commands - generic methods used by the rest of the commands
 // ---------------------------------------------------------------------------

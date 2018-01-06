@@ -417,7 +417,7 @@ public:
     and the backlight. This method has the same effect of calling display and
     backlight. @see display, @see backlight
     */
-   void on ( void );
+  // void on ( void );
 
    /*!
     @function
@@ -426,7 +426,7 @@ public:
     and the backlight. This method has the same effect of calling noDisplay and
     noBacklight. @see display, @see backlight
     */   
-   void off ( void );
+ //  void off ( void );
    
    //
    // virtual class methods

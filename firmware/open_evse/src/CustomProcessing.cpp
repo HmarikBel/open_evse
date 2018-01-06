@@ -25,6 +25,9 @@ void CustomProcessingClass::reset()
 	m_startE = 0;
 	m_eTotal = 0;
 	m_readNext = true;
+
+	m_backLightIsOn = true;
+	m_startReady = 0;
 }
 
 void CustomProcessingClass::process()
@@ -45,6 +48,13 @@ void CustomProcessingClass::process()
 
 	readTemperature();
 
+	checkBackLight();
+
+	readPZEM();
+}
+
+void CustomProcessingClass::readPZEM()
+{
 	float readedValue;
 	switch (m_currentParam)
 	{
@@ -221,6 +231,34 @@ void CustomProcessingClass::readTemperature()
 		}
 
 		m_temperatureRequested = false;
+	}
+}
+
+void CustomProcessingClass::checkBackLight()
+{
+	if (EVSE_STATE_A == g_EvseController.GetState())
+	{
+		if (0 == m_startReady)
+		{
+			m_startReady = millis();
+		}
+		else
+		{
+			if (m_backLightIsOn && millis() - m_startReady > 60000)
+			{
+				m_backLightIsOn = false;
+				g_OBD.noBackLight();
+			}
+		}
+	}
+	else
+	{
+		m_startReady = 0;
+		if (!m_backLightIsOn)
+		{
+			m_backLightIsOn = true;
+			g_OBD.backLight();
+		}
 	}
 }
 

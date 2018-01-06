@@ -60,6 +60,8 @@ class CustomProcessingClass
 	unsigned long m_prevReadTemperature;
 	bool m_temperatureRequested;
 
+	unsigned long m_startReady;
+
  public:
 	long m_eTotal;
 	long m_e;
@@ -68,6 +70,8 @@ class CustomProcessingClass
 	int m_v;
 
 	float m_temperature;
+
+	bool m_backLightIsOn;
 
 	CustomProcessingClass():m_pzem_ip(192, 168, 1, 1), m_pzem(ENERGY_RX_PIN, ENERGY_TX_PIN),
 		m_oneWire(ONE_WIRE_BUS_PIN), m_temperatureSensorsReader(&m_oneWire)
@@ -84,6 +88,10 @@ class CustomProcessingClass
 	void process();
 
 	void readTemperature();
+
+	void checkBackLight();
+
+	void readPZEM();
 };
 
 extern CustomProcessingClass CustomProcessing;

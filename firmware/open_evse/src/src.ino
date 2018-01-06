@@ -299,7 +299,7 @@ void TempMonitor::Read()
 #ifdef MCP9808_IS_ON_I2C
     m_MCP9808_temperature = m_tempSensor.readAmbient();  // for the MCP9808
 #endif
-
+	m_MCP9808_temperature = CustomProcessing.m_temperature * 10;
 
 #ifdef RTC
 #ifdef OPENEVSE_2
