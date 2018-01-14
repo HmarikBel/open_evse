@@ -21,6 +21,8 @@
  */
 #pragma once
 
+//#define ARCADIY
+
 #define OPEN_EVSE
 
 #include <avr/wdt.h>
@@ -146,7 +148,9 @@
 #define GFI_SELFTEST
 #endif //UL_GFI_SELFTEST
 
+#ifndef ARCADIY
 #define TEMPERATURE_MONITORING  // Temperature monitoring support
+#endif
 // not yet #define TEMPERATURE_MONITORING_NY
 
 #ifdef AMMETER
@@ -322,8 +326,12 @@
 // AN INFINITE RESET LOOP
 #define WATCHDOG_TIMEOUT WDTO_2S
 
+#ifdef ARCADIY
+#define LCD_MAX_CHARS_PER_LINE 16
+#else
 #define LCD_MAX_CHARS_PER_LINE 20
-//#define LCD_MAX_CHARS_PER_LINE 16
+#endif
+
 
 #define LCD_LINES 4
 
@@ -347,11 +355,11 @@
 #define MIN_CURRENT_CAPACITY_J1772 6 // J1772 min = 6
 // values below are just for menu
 #define MIN_CURRENT_CAPACITY_L1 MIN_CURRENT_CAPACITY_J1772
-#define MIN_CURRENT_CAPACITY_L2 10
+#define MIN_CURRENT_CAPACITY_L2 12
 
 // maximum allowable current in amps
 #define MAX_CURRENT_CAPACITY_L1 16 // J1772 Max for L1 on a 20A circuit = 16, 15A circuit = 12
-#define MAX_CURRENT_CAPACITY_L2 42 // J1772 Max for L2 = 80
+#define MAX_CURRENT_CAPACITY_L2 40 // J1772 Max for L2 = 80
 
 //J1772EVSEController
 #define CURRENT_PIN 0 // analog current reading pin ADCx
@@ -522,8 +530,12 @@
 #include "./Wire.h"
 #ifdef I2CLCD_PCF8574
 #include "./LiquidCrystal_I2C.h"
+
+#ifdef ARCADIY
+#define LCD_I2C_ADDR 0x27
+#else
 #define LCD_I2C_ADDR 0x3F
-//#define LCD_I2C_ADDR 0x27
+#endif
 
 #else
 #ifdef RGBLCD
@@ -1303,3 +1315,13 @@ extern TempMonitor g_TempMonitor;
 #include "rapi_proc.h"
 
 #include "CustomProcessing.h"
+
+//#define AMP_SWITCH_CTRL
+
+#ifdef AMP_SWITCH_CTRL
+
+#define AMP_SWITCH_CTRL_LO 12
+#define AMP_SWITCH_CTRL_HI 16
+#define AMP_SWITCH_CTRL_PIN A2
+
+#endif

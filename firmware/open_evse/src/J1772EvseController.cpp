@@ -554,6 +554,9 @@ void J1772EVSEController::SetSvcLevel(uint8_t svclvl,uint8_t updatelcd)
 
 uint8_t J1772EVSEController::GetMaxCurrentCapacity()
 {
+#ifdef AMP_SWITCH_CTRL
+	uint8_t ampacity = digitalRead(AMP_SWITCH_CTRL_PIN) ? AMP_SWITCH_CTRL_HI : AMP_SWITCH_CTRL_LO;
+#else
   uint8_t svclvl = GetCurSvcLevel();
   uint8_t ampacity =  eeprom_read_byte((uint8_t*)((svclvl == 1) ? EOFS_CURRENT_CAPACITY_L1 : EOFS_CURRENT_CAPACITY_L2));
 
@@ -576,7 +579,7 @@ uint8_t J1772EVSEController::GetMaxCurrentCapacity()
       }
     }
   }
-
+#endif
   return ampacity;
 }
 

@@ -2378,6 +2378,10 @@ uint8_t StateTransitionReqFunc(uint8_t curPilotState,uint8_t newPilotState,uint8
 
 void setup()
 {
+#ifdef AMP_SWITCH_CTRL
+	pinMode(AMP_SWITCH_CTRL_PIN, INPUT);
+#endif
+
   wdt_disable();
 
   delay(400);  // give I2C devices time to be ready before running code that wants to initialize I2C devices.  Otherwise a hang can occur upon powerup.
@@ -2422,8 +2426,9 @@ void loop()
 
   ProcessInputs();
 
+#ifndef ARCADIY
   CustomProcessing.process();
-
+#endif
   // Delay Timer Handler - GoldServe
 #ifdef DELAYTIMER
   g_DelayTimer.CheckTime();
