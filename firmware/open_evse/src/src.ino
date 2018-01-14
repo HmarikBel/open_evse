@@ -62,6 +62,10 @@
 #endif // TEMPERATURE_MONITORING
 
 
+#ifdef AMP_SWITCH_CTRL
+bool g_AmpSwitchCtrlHi = false;
+#endif
+
 #ifdef BTN_MENU
 SettingsMenu g_SettingsMenu;
 SetupMenu g_SetupMenu;
@@ -2380,6 +2384,7 @@ void setup()
 {
 #ifdef AMP_SWITCH_CTRL
 	pinMode(AMP_SWITCH_CTRL_PIN, INPUT);
+	g_AmpSwitchCtrlHi = digitalRead(AMP_SWITCH_CTRL_PIN);
 #endif
 
   wdt_disable();
@@ -2429,6 +2434,16 @@ void loop()
 #ifndef ARCADIY
   CustomProcessing.process();
 #endif
+
+#ifdef AMP_SWITCH_CTRL
+  bool ampSwitchCtrlHi = digitalRead(AMP_SWITCH_CTRL_PIN);
+  if (ampSwitchCtrlHi != g_AmpSwitchCtrlHi)
+  {
+	  g_AmpSwitchCtrlHi = ampSwitchCtrlHi;
+	  g_EvseController.SetCurrentCapacity(g_EvseController.GetMaxCurrentCapacity(), 1, 1);
+  }
+#endif
+
   // Delay Timer Handler - GoldServe
 #ifdef DELAYTIMER
   g_DelayTimer.CheckTime();

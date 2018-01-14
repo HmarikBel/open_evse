@@ -1316,7 +1316,7 @@ extern TempMonitor g_TempMonitor;
 
 #include "CustomProcessing.h"
 
-//#define AMP_SWITCH_CTRL
+#define AMP_SWITCH_CTRL
 
 #ifdef AMP_SWITCH_CTRL
 
