@@ -523,7 +523,7 @@ void OnboardDisplay::Update(int8_t updmode)
     sprintf(g_sTmp,g_sRdyLAstr,(int)svclvl,currentcap);
 #endif
     switch(curstate) {
-    case EVSE_STATE_A: // not connected
+    case EVSE_STATE_A:										// not connected
       SetGreenLed(1);
       SetRedLed(0);
 #ifdef LCD16X2
@@ -558,7 +558,9 @@ void OnboardDisplay::Update(int8_t updmode)
 #endif //Adafruit RGB LCD
       // n.b. blue LED is off
       break;
-    case EVSE_STATE_B: // connected/not charging
+
+
+    case EVSE_STATE_B:											// connected/not charging
       SetGreenLed(1);
       SetRedLed(1);
 #ifdef LCD16X2 //Adafruit RGB LCD
@@ -590,7 +592,7 @@ void OnboardDisplay::Update(int8_t updmode)
       g_DelayTimer.PrintTimerIcon();
 #endif //#ifdef DELAYTIMER
       LcdPrint_P(g_psEvConnected);
-      LcdPrint(10,0,g_sTmp);
+	  LcdPrint(LCD_MAX_CHARS_PER_LINE - 6, 0, g_sTmp);
 
 #ifdef KWH_RECORDING
       sprintf(g_sTmp,STRF_WH,(g_WattSeconds / 3600) );
@@ -603,7 +605,9 @@ void OnboardDisplay::Update(int8_t updmode)
 #endif //Adafruit RGB LCD
       // n.b. blue LED is off
       break;
-    case EVSE_STATE_C: // charging
+
+
+    case EVSE_STATE_C:	// ----------------------------- charging
       SetGreenLed(0);
       SetRedLed(0);
 #ifdef LCD16X2 //Adafruit RGB LCD
@@ -630,7 +634,9 @@ void OnboardDisplay::Update(int8_t updmode)
 #endif //Adafruit RGB LCD
       // n.b. blue LED is on
       break;
-    case EVSE_STATE_D: // vent required
+
+
+    case EVSE_STATE_D: // -------------------------- vent required
       SetGreenLed(0);
       SetRedLed(1);
 #ifdef LCD16X2 //Adafruit RGB LCD
@@ -664,7 +670,8 @@ void OnboardDisplay::Update(int8_t updmode)
       // n.b. blue LED is off
       break;
 #ifdef TEMPERATURE_MONITORING
-    case EVSE_STATE_OVER_TEMPERATURE:    // overtemp message in Red on the RGB LCD
+
+    case EVSE_STATE_OVER_TEMPERATURE:    // --------------- overtemp message in Red on the RGB LCD
       SetGreenLed(0);
       SetRedLed(1);
 #ifdef LCD16X2 //Adafruit RGB LCD
@@ -688,7 +695,9 @@ void OnboardDisplay::Update(int8_t updmode)
 #endif //Adafruit RGB LCD
       // n.b. blue LED is off
       break;
-    case EVSE_STATE_STUCK_RELAY:
+
+
+    case EVSE_STATE_STUCK_RELAY:  //--------------------------------
       SetGreenLed(0);
       SetRedLed(1);
 #ifdef LCD16X2 //Adafruit RGB LCD
@@ -716,7 +725,7 @@ void OnboardDisplay::Update(int8_t updmode)
       LcdMsg_P(g_psTestFailed,g_psGfci);
 #endif
       break;
-    case EVSE_STATE_SLEEPING:
+    case EVSE_STATE_SLEEPING:  //----------------------------------------
       SetGreenLed(1);
       SetRedLed(1);
 #ifdef LCD16X2
@@ -747,9 +756,9 @@ void OnboardDisplay::Update(int8_t updmode)
       strcpy(g_sTmp,g_sRetryIn);
       int resetsec = (int)(g_EvseController.GetResetMs() / 1000ul);
       if (resetsec >= 0) {
-	sprintf(g_sTmp+sizeof(g_sTmp)-6,g_sHHMMfmt,resetsec / 60,resetsec % 60);
-	strcat(g_sTmp,g_sTmp+sizeof(g_sTmp)-6);
-	LcdPrint(1,g_sTmp);
+			sprintf(g_sTmp+sizeof(g_sTmp)-6,g_sHHMMfmt,resetsec / 60,resetsec % 60);
+			strcat(g_sTmp,g_sTmp+sizeof(g_sTmp)-6);
+			LcdPrint(1,g_sTmp);
       }
 #endif // LCD16X2
       return;
@@ -794,7 +803,7 @@ void OnboardDisplay::Update(int8_t updmode)
     }
 #endif // AMMETER
 
-    if (curstate == EVSE_STATE_C) {
+    if (curstate == EVSE_STATE_B || curstate == EVSE_STATE_C) {
 #ifndef KWH_RECORDING
       time_t elapsedTime = g_EvseController.GetElapsedChargeTime();
 #endif
@@ -825,49 +834,26 @@ void OnboardDisplay::Update(int8_t updmode)
 
 #ifdef TEMPERATURE_MONITORING
       if ((g_TempMonitor.OverTemperature()) || TEMPERATURE_DISPLAY_ALWAYS)  {
-	//g_OBD.LcdClearLine(1);
-	const char *tempfmt = "%2d.%1dC";
-#ifdef MCP9808_IS_ON_I2C
-	if ( g_TempMonitor.m_MCP9808_temperature != 0 ) {   // it returns 0 if it is not present
-	  sprintf(g_sTmp,tempfmt,g_TempMonitor.m_MCP9808_temperature/10, abs(g_TempMonitor.m_MCP9808_temperature % 10));  //  Ambient sensor near or on the LCD
-	  LcdPrint(0,1,g_sTmp);
-	}
-#endif
-
-#ifdef RTC
-	if ( g_TempMonitor.m_DS3231_temperature != 0) {   // it returns 0 if it is not present
-	  sprintf(g_sTmp,tempfmt,g_TempMonitor.m_DS3231_temperature/10, abs(g_TempMonitor.m_DS3231_temperature % 10));      //  sensor built into the DS3231 RTC Chip
-	  LcdPrint(5,1,g_sTmp);
-	}
-#endif
-
-#ifdef TMP007_IS_ON_I2C
-	if ( g_TempMonitor.m_TMP007_temperature != 0 ) {    // it returns 0 if it is not present
-	  sprintf(g_sTmp,tempfmt,g_TempMonitor.m_TMP007_temperature/10, abs(g_TempMonitor.m_TMP007_temperature % 10));  //  Infrared sensor probably looking at 30A fuses
-	  LcdPrint(11,1,g_sTmp);
-	}
-#endif
-
-	if (g_TempMonitor.BlinkAlarm() && g_TempMonitor.OverTemperatureShutdown()) { // Blink Red off-and-on while over the temperature shutdown limit, zero current should flow to the EV
-	  g_TempMonitor.SetBlinkAlarm(0);                                            // toggle the alarm flag so we can blink
-	  SetRedLed(1);
+		if (g_TempMonitor.BlinkAlarm() && g_TempMonitor.OverTemperatureShutdown()) { // Blink Red off-and-on while over the temperature shutdown limit, zero current should flow to the EV
+		  g_TempMonitor.SetBlinkAlarm(0);                                            // toggle the alarm flag so we can blink
+		  SetRedLed(1);
 #ifdef LCD16X2 //Adafruit RGB LCD
-	  LcdSetBacklightColor(RED);
+		  LcdSetBacklightColor(RED);
 #endif //Adafruit RGB LCD
-	}
-	else if (g_TempMonitor.BlinkAlarm() == 0) { // If baclkight was left RED while last blinking
-	  g_TempMonitor.SetBlinkAlarm(1);           // toggle the alarm flag so we can blink
-	  SetRedLed(0);
+		}
+		else if (g_TempMonitor.BlinkAlarm() == 0) { // If baclkight was left RED while last blinking
+		  g_TempMonitor.SetBlinkAlarm(1);           // toggle the alarm flag so we can blink
+		  SetRedLed(0);
 #ifdef LCD16X2 //Adafruit RGB LCD
-	  LcdSetBacklightColor(TEAL);
+		  LcdSetBacklightColor(TEAL);
 #endif
-	}
+		}
       }  // (g_TempMonitor.OverTemperature()) || TEMPERATURE_DISPLAY_ALWAYS)
       else if (g_TempMonitor.BlinkAlarm() == 0) { // If baclkight was left RED while last blinking
-	g_TempMonitor.SetBlinkAlarm(1); // reset the alarm flag
-	SetRedLed(0);                   // restore the normal TEAL backlight
+		g_TempMonitor.SetBlinkAlarm(1); // reset the alarm flag
+		SetRedLed(0);                   // restore the normal TEAL backlight
 #ifdef LCD16X2 //Adafruit RGB LCD
-	LcdSetBacklightColor(TEAL);
+		LcdSetBacklightColor(TEAL);
 #endif
       }
       //if (!(g_TempMonitor.OverTemperature() || TEMPERATURE_DISPLAY_ALWAYS)) {
