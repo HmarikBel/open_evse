@@ -21,7 +21,7 @@
  */
 #pragma once
 
-//#define ARCADIY
+#define ARCADIY
 
 #define OPEN_EVSE
 
@@ -532,7 +532,8 @@
 #include "./LiquidCrystal_I2C.h"
 
 #ifdef ARCADIY
-#define LCD_I2C_ADDR 0x27
+//#define LCD_I2C_ADDR 0x27
+#define LCD_I2C_ADDR 0x3F
 #else
 #define LCD_I2C_ADDR 0x3F
 #endif

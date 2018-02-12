@@ -88,17 +88,20 @@ void CustomProcessingClass::readPZEM()
 					m_e = m_eTotal;
 				}
 
-				g_OBD.LcdPrint_P(0, 2, g_psEnergy);
+				if (LCD_MAX_CHARS_PER_LINE == 20)
+				{
+					g_OBD.LcdPrint_P(0, 2, g_psEnergy);
+				}
 				if (m_e >= 0)
 				{
 					sprintf(g_sTmp, "%5ld", m_e);
-					g_OBD.LcdPrint(2, 2, g_sTmp);
+					g_OBD.LcdPrint(LCD_MAX_CHARS_PER_LINE == 20 ? 2 : 0, 2, g_sTmp);
 				}
 				else
 				{
-					g_OBD.LcdPrint_P(2, 2, g_psEnergyEmpty);
+					g_OBD.LcdPrint_P(LCD_MAX_CHARS_PER_LINE == 20 ? 2 : 0, 2, g_psEnergyEmpty);
 				}
-				g_OBD.LcdPrint_P(7, 2, g_psEnergyUnit);
+				g_OBD.LcdPrint_P(LCD_MAX_CHARS_PER_LINE == 20 ? 7 : 5, 2, g_psEnergyUnit);
 			}
 			break;
 		}
@@ -116,17 +119,20 @@ void CustomProcessingClass::readPZEM()
 			{
 				m_p = (int)readedValue;
 
-				g_OBD.LcdPrint_P(0, 3, g_psPower);
+				if (LCD_MAX_CHARS_PER_LINE == 20)
+				{
+					g_OBD.LcdPrint_P(0, 3, g_psPower);
+				}
 				if (m_p >= 0)
 				{
 					sprintf(g_sTmp, "%5d", m_p);
-					g_OBD.LcdPrint(2, 3, g_sTmp);
+					g_OBD.LcdPrint(LCD_MAX_CHARS_PER_LINE == 20 ? 2 : 0, 3, g_sTmp);
 				}
 				else
 				{
-					g_OBD.LcdPrint_P(2, 3, g_psEnergyEmpty);
+					g_OBD.LcdPrint_P(LCD_MAX_CHARS_PER_LINE == 20 ? 2 : 0, 3, g_psEnergyEmpty);
 				}
-				g_OBD.LcdPrint_P(7, 3, g_psPowerUnit);
+				g_OBD.LcdPrint_P(LCD_MAX_CHARS_PER_LINE == 20 ? 7 : 5, 3, g_psPowerUnit);
 			}
 			break;
 		case 2: 
@@ -142,18 +148,28 @@ void CustomProcessingClass::readPZEM()
 			if (readedValue != PZEM_NOT_READY_VALUE)
 			{
 				m_v = (int)readedValue;
+				if (m_v > 150)
+				{
+#ifdef ARCADIY
+					m_v = m_v - 4;
+#endif // ARCADIY
+					m_v = m_v + 1;
+				}
 
-				g_OBD.LcdPrint_P(12, 2, g_psVoltage);
+				if (LCD_MAX_CHARS_PER_LINE == 20)
+				{
+					g_OBD.LcdPrint_P(12, 2, g_psVoltage);
+				}
 				if (m_v >= 0)
 				{
 					sprintf(g_sTmp, "%4d", m_v);
-					g_OBD.LcdPrint(15, 2, g_sTmp);
+					g_OBD.LcdPrint(LCD_MAX_CHARS_PER_LINE == 20 ? 15 : 11, 2, g_sTmp);
 				}
 				else
 				{
-					g_OBD.LcdPrint_P(15, 2, g_psVoltageEmpty);
+					g_OBD.LcdPrint_P(LCD_MAX_CHARS_PER_LINE == 20 ? 15 : 11, 2, g_psVoltageEmpty);
 				}
-				g_OBD.LcdPrint_P(19, 2, g_psVoltageUnit);
+				g_OBD.LcdPrint_P(LCD_MAX_CHARS_PER_LINE == 20 ? 19 : 15, 2, g_psVoltageUnit);
 			}
 			break;
 		case 3: 
@@ -170,17 +186,20 @@ void CustomProcessingClass::readPZEM()
 			{
 				m_c = readedValue;
 
-				g_OBD.LcdPrint_P(12, 3, g_psCurrent);
+				if (LCD_MAX_CHARS_PER_LINE == 20)
+				{
+					g_OBD.LcdPrint_P(12, 3, g_psCurrent);
+				}
 				if (m_c >= 0)
 				{
 					sprintf(g_sTmp, "%2d.%01d", (int)m_c, (int)((m_c - (int)m_c) * 100));
-					g_OBD.LcdPrint(15, 3, g_sTmp);
+					g_OBD.LcdPrint(LCD_MAX_CHARS_PER_LINE == 20 ? 15 : 11, 3, g_sTmp);
 				}
 				else
 				{
-					g_OBD.LcdPrint_P(15, 3, g_psVoltageEmpty);
+					g_OBD.LcdPrint_P(LCD_MAX_CHARS_PER_LINE == 20 ? 15 : 11, 3, g_psVoltageEmpty);
 				}
-				g_OBD.LcdPrint_P(19, 3, g_psCurrentUnit);
+				g_OBD.LcdPrint_P(LCD_MAX_CHARS_PER_LINE == 20 ? 19 : 15, 3, g_psCurrentUnit);
 			}
 			break;
 	}
@@ -244,7 +263,7 @@ void CustomProcessingClass::checkBackLight()
 		}
 		else
 		{
-			if (m_backLightIsOn && millis() - m_startReady > 60000)
+			if (m_backLightIsOn && millis() - m_startReady > 300000)
 			{
 				m_backLightIsOn = false;
 				g_OBD.noBackLight();

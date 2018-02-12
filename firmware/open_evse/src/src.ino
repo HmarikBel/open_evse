@@ -2417,9 +2417,9 @@ void loop()
 
   ProcessInputs();
 
-#ifndef ARCADIY
+//#ifndef ARCADIY
   CustomProcessing.process();
-#endif
+//#endif
 
 #ifdef AMP_SWITCH_CTRL
   bool ampSwitchCtrlHi = digitalRead(AMP_SWITCH_CTRL_PIN);
