@@ -260,11 +260,13 @@ void J1772EVSEController::ShowDisabledTests()
 void J1772EVSEController::chargingOn()
 {  // turn on charging current
 #ifdef CHARGING_REG
-  pinCharging.write(0); // inverse
+	pinChargingOut(&pinCharging, 1);
 #endif
+
 #ifdef CHARGING2_REG
-  pinCharging2.write(0);
+	pinChargingOut(&pinCharging2, 1);
 #endif // CHARGING2_REG
+
 #ifdef CHARGINGAC_REG
   pinChargingAC.write(1);
 #endif
@@ -277,10 +279,10 @@ void J1772EVSEController::chargingOn()
 void J1772EVSEController::chargingOff()
 { // turn off charging current
 #ifdef CHARGING_REG
-  pinCharging.write(1);  //inverse
+	pinChargingOut(&pinCharging, 0);
 #endif
 #ifdef CHARGING2_REG
-  pinCharging2.write(1);
+	pinChargingOut(&pinCharging2, 0);
 #endif
 #ifdef CHARGINGAC_REG
   pinChargingAC.write(0);
@@ -683,7 +685,7 @@ uint8_t J1772EVSEController::doPost()
           
       // save state with Relay 1 on 
 #ifdef CHARGING_REG
-      pinCharging.write(0);  //inverse
+	  pinChargingOut(&pinCharging, 1);
 #endif
 #ifdef CHARGINGAC_REG
       pinChargingAC.write(1);
@@ -691,7 +693,7 @@ uint8_t J1772EVSEController::doPost()
       delay(RelaySettlingTime);
       Relay1 = ReadACPins();
 #ifdef CHARGING_REG
-      pinCharging.write(1); //inverse
+	  pinChargingOut(&pinCharging, 0);
 #endif
 #ifdef CHARGINGAC_REG
       pinChargingAC.write(0);
@@ -700,12 +702,12 @@ uint8_t J1772EVSEController::doPost()
           
       // save state for Relay 2 on
 #ifdef CHARGING2_REG
-      pinCharging2.write(0); 
+	  pinChargingOut(&pinCharging2, 1);
 #endif
       delay(RelaySettlingTime);
       Relay2 = ReadACPins();
 #ifdef CHARGING2_REG
-      pinCharging2.write(1); 
+	  pinChargingOut(&pinCharging2, 0);
 #endif
       delay(RelaySettlingTime); //allow relay to fully open before running other tests
         
@@ -853,11 +855,11 @@ void J1772EVSEController::Init()
 
 #ifdef CHARGING_REG
   pinCharging.init(CHARGING_REG,CHARGING_IDX,DigitalPin::OUT);
-  pinCharging.write(1); //inverse off
+  pinChargingOut(&pinCharging, 0);
 #endif
 #ifdef CHARGING2_REG
   pinCharging2.init(CHARGING2_REG,CHARGING2_IDX,DigitalPin::OUT);
-  pinCharging2.write(1); //inverse off
+  pinChargingOut(&pinCharging2, 0);
 #endif
 #ifdef CHARGINGAC_REG
   pinChargingAC.init(CHARGINGAC_REG,CHARGINGAC_IDX,DigitalPin::OUT);

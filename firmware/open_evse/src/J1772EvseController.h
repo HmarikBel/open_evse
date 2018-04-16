@@ -229,6 +229,15 @@ class J1772EVSEController {
   uint32_t m_Voltage; // mV
 #endif // VOLTMETER
 
+  void pinChargingOut(DigitalPin* pin, bool out)
+  {
+#ifdef INVERSE_RELAY_OUTPUT
+	  (*pin).write(out ? 0 : 1); // inverse
+#else
+	  (*pin).write(out ? 1 : 0);
+#endif //INVERSE_RELAY_OUTPUT
+  }
+
 public:
   J1772EVSEController();
   void Init();

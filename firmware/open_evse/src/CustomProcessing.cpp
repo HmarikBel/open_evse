@@ -7,15 +7,59 @@
 
 void CustomProcessingClass::init()
 {
+#ifdef MY_PORTABLE
+	m_insideThermometerAddr[0] = 0x28;
+	m_insideThermometerAddr[1] = 0xFF;
+	m_insideThermometerAddr[2] = 0x08;
+	m_insideThermometerAddr[3] = 0xD9;
+	m_insideThermometerAddr[4] = 0x61;
+	m_insideThermometerAddr[5] = 0x17;
+	m_insideThermometerAddr[6] = 0x04;
+	m_insideThermometerAddr[7] = 0x09;
+	m_outsideThermometerAddr[0] = 0x28;
+	m_outsideThermometerAddr[1] = 0xFF;
+	m_outsideThermometerAddr[2] = 0x71;
+	m_outsideThermometerAddr[3] = 0xAD;
+	m_outsideThermometerAddr[4] = 0x61;
+	m_outsideThermometerAddr[5] = 0x17;
+	m_outsideThermometerAddr[6] = 0x04;
+	m_outsideThermometerAddr[7] = 0x31;
+#else
+	m_insideThermometerAddr[0] = 0x28;
+	m_insideThermometerAddr[1] = 0xFF;
+	m_insideThermometerAddr[2] = 0xB5;
+	m_insideThermometerAddr[3] = 0x03;
+	m_insideThermometerAddr[4] = 0x61;
+	m_insideThermometerAddr[5] = 0x04;
+	m_insideThermometerAddr[6] = 0x00;
+	m_insideThermometerAddr[7] = 0x68;
+	m_outsideThermometerAddr[0] = 0x00;
+	m_outsideThermometerAddr[1] = 0xFF;
+	m_outsideThermometerAddr[2] = 0x71;
+	m_outsideThermometerAddr[3] = 0xAD;
+	m_outsideThermometerAddr[4] = 0x61;
+	m_outsideThermometerAddr[5] = 0x17;
+	m_outsideThermometerAddr[6] = 0x04;
+	m_outsideThermometerAddr[7] = 0x31;
+#endif // MY_PORTABLE
+
 	m_pzem.setAddress(m_pzem_ip);
 
 	m_temperatureSensorsReader.setResolution(m_insideThermometerAddr, 11);
+
+	m_prevProcessing = 0;
+	m_prevReadTemperature = 0;
+	m_prevTemperatureShow = 0;
+
+	reset();
+
+//	searchOneWire();
+//	printOneWireAddress(m_insideThermometerAddr);
+//	printOneWireAddress(m_outsideThermometerAddr);
 }
 
 void CustomProcessingClass::reset()
 {
-	m_prevProcessing = 0;
-	m_prevReadTemperature = 0;
 	m_temperatureRequested = false;
 	m_currentParam = 0;
 	m_e = 0;
@@ -217,13 +261,13 @@ void CustomProcessingClass::readPZEM()
 
 void CustomProcessingClass::readTemperature()
 {
-	if (!m_temperatureRequested && millis() - m_prevReadTemperature < READ_TEMPERATURE_INTERVAL)
-	{
-		return;
-	}
-
 	if (!m_temperatureRequested)
 	{
+		if (millis() - m_prevReadTemperature < READ_TEMPERATURE_INTERVAL)
+		{
+			return;
+		}
+
 		if (millis() - m_prevReadTemperature < READ_TEMPERATURE_INTERVAL * 2)
 		{
 			m_prevReadTemperature += READ_TEMPERATURE_INTERVAL;
@@ -235,22 +279,77 @@ void CustomProcessingClass::readTemperature()
 
 		m_temperatureSensorsReader.requestTemperatures();
 		m_temperatureRequested = true;
+		m_startWaitTemperature = millis();
+
+		Serial.println("Request");
 	}
 	else
 	{
-		if (millis() - m_prevReadTemperature < WAIT_TEMPERATURE_INTERVAL)
+		if (millis() - m_startWaitTemperature < WAIT_TEMPERATURE_INTERVAL)
 		{
 			return;
 		}
 
-		m_temperature = m_temperatureSensorsReader.getTempC(m_insideThermometerAddr);
-		if (m_temperature == DEVICE_DISCONNECTED)
+		m_temperatureInside = m_temperatureSensorsReader.getTempC(m_insideThermometerAddr);
+		if (m_temperatureInside == DEVICE_DISCONNECTED)
 		{
-			m_temperature = 0;
+			m_temperatureInside = 0;
+		}
+
+		m_temperatureOutside = m_temperatureSensorsReader.getTempC(m_outsideThermometerAddr);
+		if (m_temperatureOutside == DEVICE_DISCONNECTED)
+		{
+			m_temperatureOutside = 0;
 		}
 
 		m_temperatureRequested = false;
+
+		Serial.println("Read");
+
 	}
+}
+
+void CustomProcessingClass::getTemperatureToShow(char* buffer, byte* length)
+{
+	if (millis() - m_prevTemperatureShow >= CHANGE_ON_UI_TEMPERATURE_INTERVAL)
+	{
+		if (millis() - m_prevTemperatureShow < CHANGE_ON_UI_TEMPERATURE_INTERVAL * 2)
+		{
+			m_prevTemperatureShow += CHANGE_ON_UI_TEMPERATURE_INTERVAL;
+		}
+		else
+		{
+			m_prevTemperatureShow = millis();
+		}
+
+		m_temperatureShownInside = !m_temperatureShownInside;
+	}
+
+	const char *tempfmt = "%2d.%1dC";
+
+#ifndef MY_PORTABLE
+//	if (m_outsideThermometerAddr[0] == 0)
+//	{
+		sprintf(buffer, "%2d.%1dC", (int)m_temperatureInside, ((int)(m_temperatureInside * 10)) % 10);
+//	}
+//	else
+//	{
+#else
+		float value = m_temperatureShownInside ? m_temperatureInside : m_temperatureOutside;
+
+		sprintf(buffer, "%s %2d.%1dC", m_temperatureShownInside ? "I" : "O", (int)value, ((int)(value * 10)) % 10);
+	//}
+#endif
+
+	//Serial.println(buffer);
+	//*length = m_outsideThermometerAddr[0] == 0 ? 5 : 7;
+
+
+#ifdef MY_PORTABLE
+		*length = 7;
+#else
+		*length = 5;
+#endif
 }
 
 void CustomProcessingClass::checkBackLight()
@@ -279,6 +378,39 @@ void CustomProcessingClass::checkBackLight()
 			g_OBD.backLight();
 		}
 	}
+}
+
+void CustomProcessingClass::searchOneWire()
+{
+	//if (insideThermometerAddr[0] == 0)
+	{
+		char buffer[15];
+		byte addr[8];
+		bool devicesExists = false;
+		while (m_oneWire.search(addr))
+		{
+			printOneWireAddress(addr);
+		}
+		if (!devicesExists)
+		{
+			String log = F("No oneWire addresses.");
+//			Data.addLog(log);
+			Serial.println(log);
+		}
+	}
+}
+
+void CustomProcessingClass::printOneWireAddress(byte addr[8])
+{
+	char buffer[5];
+	String log = F("OneWire address: ");
+	for (uint8_t i = 0; i < 8; i++)
+	{
+		sprintf(buffer, "%02X", addr[i]);
+		log += buffer;
+	}
+	//			Data.addLog(log);
+	Serial.println(log);
 }
 
 CustomProcessingClass CustomProcessing;

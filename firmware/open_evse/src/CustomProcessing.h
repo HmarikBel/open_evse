@@ -22,7 +22,8 @@
 #define PROCESS_INTERVAL 500
 
 #define READ_TEMPERATURE_INTERVAL 5000
-#define WAIT_TEMPERATURE_INTERVAL 400
+#define WAIT_TEMPERATURE_INTERVAL 500
+#define CHANGE_ON_UI_TEMPERATURE_INTERVAL 3000
 
 const char g_psEnergy[] PROGMEM = "E:";
 const char g_psEnergyEmpty[] PROGMEM = "-----";
@@ -47,8 +48,9 @@ class CustomProcessingClass
 	// Pass our oneWire reference to Dallas Temperature. 
 	DallasTemperature m_temperatureSensorsReader;
 
-	// arrays to hold device address 28FFB50361040068
-	DeviceAddress m_insideThermometerAddr = { 0x28, 0xFF, 0xB5, 0x03, 0x61, 0x04, 0x00, 0x68 };
+	// arrays to hold device address 
+	DeviceAddress m_insideThermometerAddr;
+	DeviceAddress m_outsideThermometerAddr;
 
 	unsigned long m_startE;
 
@@ -58,7 +60,11 @@ class CustomProcessingClass
 
 	unsigned long m_prevProcessing;
 	unsigned long m_prevReadTemperature;
+	unsigned long m_startWaitTemperature;
 	bool m_temperatureRequested;
+
+	bool m_temperatureShownInside;
+	unsigned long m_prevTemperatureShow;
 
 	unsigned long m_startReady;
 
@@ -69,15 +75,14 @@ class CustomProcessingClass
 	float m_c;
 	int m_v;
 
-	float m_temperature;
+	float m_temperatureInside;
+	float m_temperatureOutside;
 
 	bool m_backLightIsOn;
 
 	CustomProcessingClass():m_pzem_ip(192, 168, 1, 1), m_pzem(ENERGY_RX_PIN, ENERGY_TX_PIN),
 		m_oneWire(ONE_WIRE_BUS_PIN), m_temperatureSensorsReader(&m_oneWire)
 	{
-		reset();
-
 		m_pzem.setReadTimeout(70);
 	}
 
@@ -89,9 +94,22 @@ class CustomProcessingClass
 
 	void readTemperature();
 
+	float getHigherTemperature() 
+	{
+		if (m_temperatureInside > m_temperatureOutside)
+			return m_temperatureInside;
+		return m_temperatureOutside;
+	}
+
+	void getTemperatureToShow(char* buffer, byte* length);
+
 	void checkBackLight();
 
 	void readPZEM();
+
+	void searchOneWire();
+
+	void printOneWireAddress(byte addr[8]);
 };
 
 extern CustomProcessingClass CustomProcessing;

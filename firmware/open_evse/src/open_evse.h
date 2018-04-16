@@ -21,7 +21,13 @@
  */
 #pragma once
 
-#define ARCADIY
+//#define ARCADIY
+#define MY_PORTABLE
+
+#ifndef MY_PORTABLE
+#define INVERSE_RELAY_OUTPUT
+#endif // MY_PORTABLE
+
 
 #define OPEN_EVSE
 
@@ -359,7 +365,13 @@
 
 // maximum allowable current in amps
 #define MAX_CURRENT_CAPACITY_L1 16 // J1772 Max for L1 on a 20A circuit = 16, 15A circuit = 12
+
+#ifdef MY_PORTABLE
+#define MAX_CURRENT_CAPACITY_L2 20 // J1772 Max for L2 = 80
+#else
 #define MAX_CURRENT_CAPACITY_L2 40 // J1772 Max for L2 = 80
+#endif // !MY_PORTABLE
+
 
 //J1772EVSEController
 #define CURRENT_PIN 0 // analog current reading pin ADCx
@@ -535,7 +547,9 @@
 //#define LCD_I2C_ADDR 0x27
 #define LCD_I2C_ADDR 0x3F
 #else
-#define LCD_I2C_ADDR 0x3F
+//#define LCD_I2C_ADDR 0x3F // My wall
+#define LCD_I2C_ADDR 0x27
+
 #endif
 
 #else
@@ -1317,7 +1331,7 @@ extern TempMonitor g_TempMonitor;
 
 #include "CustomProcessing.h"
 
-#define AMP_SWITCH_CTRL
+//#define AMP_SWITCH_CTRL
 
 #ifdef AMP_SWITCH_CTRL
 

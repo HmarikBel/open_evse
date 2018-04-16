@@ -303,7 +303,7 @@ void TempMonitor::Read()
 #ifdef MCP9808_IS_ON_I2C
     m_MCP9808_temperature = m_tempSensor.readAmbient();  // for the MCP9808
 #endif
-	m_MCP9808_temperature = CustomProcessing.m_temperature * 10;
+	m_MCP9808_temperature = CustomProcessing.getHigherTemperature() * 10;
 
 #ifdef RTC
 #ifdef OPENEVSE_2
@@ -878,12 +878,10 @@ void OnboardDisplay::Update(int8_t updmode)
 
 #ifdef TEMPERATURE_MONITORING
 	if (TEMPERATURE_DISPLAY_ALWAYS) {
-		const char *tempfmt = "%2d.%1dC";
 #ifdef DS18B20
-		if (CustomProcessing.m_temperature >= 0) {
-			sprintf(g_sTmp, tempfmt, (int)CustomProcessing.m_temperature, ((int)(CustomProcessing.m_temperature * 10)) % 10);
-			LcdPrint(LCD_MAX_CHARS_PER_LINE - 5, 1, g_sTmp);
-		}
+		byte length;
+		CustomProcessing.getTemperatureToShow(g_sTmp, &length);
+		LcdPrint(LCD_MAX_CHARS_PER_LINE - length, 1, g_sTmp);
 	}
 #endif
 #endif

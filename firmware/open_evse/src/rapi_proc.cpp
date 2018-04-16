@@ -485,7 +485,7 @@ int EvseRapiProcessor::processCmd()
   case 'G': // get parameter
     switch(*s) {
     case '0':
-      	sprintf(buffer,"%ld",CustomProcessing.m_eTotal);
+      	sprintf(buffer, "%ld",CustomProcessing.m_eTotal);
       bufCnt = 1; // flag response text output
       rc = 0;
       break;
@@ -510,7 +510,12 @@ int EvseRapiProcessor::processCmd()
 		rc = 0;
 		break;
 	case '5':
-		sprintf(buffer, "%d", (int)(CustomProcessing.m_temperature * 10));
+		sprintf(buffer, "%d", (int)(CustomProcessing.m_temperatureInside * 10));
+		bufCnt = 1; // flag response text output
+		rc = 0;
+		break;
+	case '6':
+		sprintf(buffer, "%d", (int)(CustomProcessing.m_temperatureOutside * 10));
 		bufCnt = 1; // flag response text output
 		rc = 0;
 		break;
