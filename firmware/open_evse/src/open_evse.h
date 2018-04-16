@@ -657,7 +657,7 @@
 #ifdef OPENEVSE_2
 #define TEMPERATURE_AMBIENT_THROTTLE_DOWN 650
 #else
-#define TEMPERATURE_AMBIENT_THROTTLE_DOWN 450
+#define TEMPERATURE_AMBIENT_THROTTLE_DOWN 500
 #endif
 
 // If the OpenEVSE responds nicely to the lower current drawn and temperatures in the enclosure
@@ -665,14 +665,14 @@
 #ifdef OPENEVSE_2
 #define TEMPERATURE_AMBIENT_RESTORE_AMPERAGE 620
 #else
-#define TEMPERATURE_AMBIENT_RESTORE_AMPERAGE 420
+#define TEMPERATURE_AMBIENT_RESTORE_AMPERAGE 450
 #endif
 
 // This is the temperature in the enclosure where we tell the car to draw 1/4 amperage or 6A is minimum.
 #ifdef OPENEVSE_2
 #define TEMPERATURE_AMBIENT_SHUTDOWN 680
 #else
-#define TEMPERATURE_AMBIENT_SHUTDOWN 500
+#define TEMPERATURE_AMBIENT_SHUTDOWN 550
 #endif
 
 //  At this temperature gracefully tell the EV to quit drawing any current, and leave the EVSE in
@@ -681,7 +681,7 @@
 #ifdef OPENEVSE_2
 #define TEMPERATURE_AMBIENT_PANIC 710
 #else
-#define TEMPERATURE_AMBIENT_PANIC 600
+#define TEMPERATURE_AMBIENT_PANIC 700
 #endif
 
 #define TEMPERATURE_INFRARED_THROTTLE_DOWN 650    // This is the temperature seen  by the IR sensor where we tell the car to draw 1/2 amperage.

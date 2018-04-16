@@ -68,6 +68,8 @@ class CustomProcessingClass
 
 	unsigned long m_startReady;
 
+	float readTemperature(DeviceAddress addr, float prevValue);
+
  public:
 	long m_eTotal;
 	long m_e;

@@ -280,8 +280,6 @@ void CustomProcessingClass::readTemperature()
 		m_temperatureSensorsReader.requestTemperatures();
 		m_temperatureRequested = true;
 		m_startWaitTemperature = millis();
-
-		Serial.println("Request");
 	}
 	else
 	{
@@ -290,23 +288,35 @@ void CustomProcessingClass::readTemperature()
 			return;
 		}
 
-		m_temperatureInside = m_temperatureSensorsReader.getTempC(m_insideThermometerAddr);
-		if (m_temperatureInside == DEVICE_DISCONNECTED)
-		{
-			m_temperatureInside = 0;
-		}
+		m_temperatureInside = readTemperature(m_insideThermometerAddr, m_temperatureInside);
 
-		m_temperatureOutside = m_temperatureSensorsReader.getTempC(m_outsideThermometerAddr);
-		if (m_temperatureOutside == DEVICE_DISCONNECTED)
-		{
-			m_temperatureOutside = 0;
-		}
+		m_temperatureOutside = readTemperature(m_outsideThermometerAddr, m_temperatureOutside);
 
 		m_temperatureRequested = false;
-
-		Serial.println("Read");
-
 	}
+}
+
+float CustomProcessingClass::readTemperature(DeviceAddress addr, float prevValue)
+{
+	float value = m_temperatureSensorsReader.getTempC(addr);
+	if (value == DEVICE_DISCONNECTED)
+	{
+		return 0;
+	}
+
+	if (prevValue != 0 && value != 0)
+	{
+		if (prevValue - value > 20)
+		{
+			return prevValue - 1;
+		}
+
+		if (value - prevValue > 20)
+		{
+			return prevValue + 1;
+		}
+	}
+	return value;
 }
 
 void CustomProcessingClass::getTemperatureToShow(char* buffer, byte* length)
