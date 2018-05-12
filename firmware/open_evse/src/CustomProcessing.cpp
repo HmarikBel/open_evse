@@ -288,9 +288,9 @@ void CustomProcessingClass::readTemperature()
 			return;
 		}
 
-		m_temperatureInside = readTemperature(m_insideThermometerAddr, m_temperatureInside);
+		SetTemperatureInside(readTemperature(m_insideThermometerAddr, m_temperatureInside));
 
-		m_temperatureOutside = readTemperature(m_outsideThermometerAddr, m_temperatureOutside);
+		SetTemperatureOutside(readTemperature(m_outsideThermometerAddr, m_temperatureOutside));
 
 		m_temperatureRequested = false;
 	}
@@ -299,7 +299,7 @@ void CustomProcessingClass::readTemperature()
 float CustomProcessingClass::readTemperature(DeviceAddress addr, float prevValue)
 {
 	float value = m_temperatureSensorsReader.getTempC(addr);
-	if (value == DEVICE_DISCONNECTED)
+	if (value == DEVICE_DISCONNECTED || (prevValue == 0 && value > 80))
 	{
 		return 0;
 	}

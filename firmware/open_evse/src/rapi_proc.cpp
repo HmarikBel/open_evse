@@ -510,12 +510,12 @@ int EvseRapiProcessor::processCmd()
 		rc = 0;
 		break;
 	case '5':
-		sprintf(buffer, "%d", (int)(CustomProcessing.m_temperatureInside * 10));
+		sprintf(buffer, "%d %d", (int)(CustomProcessing.GetTemperatureInside() * 10), (int)(CustomProcessing.GetTemperatureInsideMax() * 10));
 		bufCnt = 1; // flag response text output
 		rc = 0;
 		break;
 	case '6':
-		sprintf(buffer, "%d", (int)(CustomProcessing.m_temperatureOutside * 10));
+		sprintf(buffer, "%d %d", (int)(CustomProcessing.GetTemperatureOutside() * 10), (int)(CustomProcessing.GetTemperatureOutsideMax() * 10));
 		bufCnt = 1; // flag response text output
 		rc = 0;
 		break;

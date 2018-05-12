@@ -70,6 +70,11 @@ class CustomProcessingClass
 
 	float readTemperature(DeviceAddress addr, float prevValue);
 
+	float m_temperatureInside;
+	float m_temperatureOutside;
+	float m_temperatureInsideMax;
+	float m_temperatureOutsideMax;
+
  public:
 	long m_eTotal;
 	long m_e;
@@ -77,8 +82,7 @@ class CustomProcessingClass
 	float m_c;
 	int m_v;
 
-	float m_temperatureInside;
-	float m_temperatureOutside;
+
 
 	bool m_backLightIsOn;
 
@@ -112,6 +116,29 @@ class CustomProcessingClass
 	void searchOneWire();
 
 	void printOneWireAddress(byte addr[8]);
+
+	void SetTemperatureInside(float temperature)
+	{
+		m_temperatureInside = temperature;
+		if (temperature > m_temperatureInsideMax)
+		{
+			m_temperatureInsideMax = temperature;
+		}
+	}
+
+	void SetTemperatureOutside(float temperature)
+	{
+		m_temperatureOutside = temperature;
+		if (temperature > m_temperatureOutsideMax)
+		{
+			m_temperatureOutsideMax = temperature;
+		}
+	}
+
+	float GetTemperatureInside() { return m_temperatureInside; }
+	float GetTemperatureOutside() { return m_temperatureOutside; }
+	float GetTemperatureInsideMax() { return m_temperatureInsideMax; }
+	float GetTemperatureOutsideMax() { return m_temperatureOutsideMax; }
 };
 
 extern CustomProcessingClass CustomProcessing;
