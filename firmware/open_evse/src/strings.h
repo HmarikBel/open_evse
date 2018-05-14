@@ -52,6 +52,7 @@ extern const char g_psTempChk[] PROGMEM;
 extern const char *g_YesNoMenuItems[];
 extern const char g_psResetNow[] PROGMEM;
 extern const char g_psReset[] PROGMEM;
+extern const char g_psDebug[] PROGMEM;
 extern const char g_psExit[] PROGMEM;
 // Add additional strings - GoldServe
 #ifdef DELAYTIMER_MENU

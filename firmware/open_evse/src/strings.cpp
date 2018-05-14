@@ -50,6 +50,7 @@ const char g_psTempChk[] PROGMEM = STR_TEMPERATURE_CHK;
 const char *g_YesNoMenuItems[] = STR_YES_NO;
 const char g_psResetNow[] PROGMEM = STR_RESTART_NOW;
 const char g_psReset[] PROGMEM = STR_RESTART;
+const char g_psDebug[] PROGMEM = STR_DEBUG;
 const char g_psExit[] PROGMEM = STR_EXIT;
 // Add additional strings - GoldServe
 #ifdef DELAYTIMER_MENU

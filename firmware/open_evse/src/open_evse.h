@@ -1089,6 +1089,14 @@ public:
   Menu *Select();
 };
 
+class DebugMenu : public Menu {
+public:
+	DebugMenu();
+	void Init();
+	void Next();
+	Menu *Select();
+};
+
 #ifdef RGBLCD
 class BklTypeMenu : public Menu {
 public:
