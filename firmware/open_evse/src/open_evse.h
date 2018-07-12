@@ -21,12 +21,18 @@
  */
 #pragma once
 
-//#define ARCADIY
-#define MY_PORTABLE
+#define ARCADIY
+//#define MY_PORTABLE
 
 #ifndef MY_PORTABLE
 #define INVERSE_RELAY_OUTPUT
 #endif // MY_PORTABLE
+
+#ifdef ARCADIY
+#define PHASE_COUNT 3
+#else
+#define PHASE_COUNT 1
+#endif // ARCADIY
 
 
 #define OPEN_EVSE
@@ -1088,7 +1094,7 @@ public:
   void Next();
   Menu *Select();
 };
-
+/*
 class DebugMenu : public Menu {
 public:
 	DebugMenu();
@@ -1096,7 +1102,7 @@ public:
 	void Next();
 	Menu *Select();
 };
-
+*/
 #ifdef RGBLCD
 class BklTypeMenu : public Menu {
 public:

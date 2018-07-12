@@ -87,7 +87,7 @@ GndChkMenu g_GndChkMenu;
 RlyChkMenu g_RlyChkMenu;
 #endif // ADVPWR
 ResetMenu g_ResetMenu;
-DebugMenu g_DebugMenu;
+//DebugMenu g_DebugMenu;
 // Instantiate additional Menus - GoldServe
 #if defined(DELAYTIMER_MENU)
 RTCMenu g_RTCMenu;
@@ -122,7 +122,7 @@ Menu *g_SettingsMenuList[] = {
   &g_DelayMenu,
 #endif // DELAYTIMER_MENU
   &g_SetupMenu,
-  &g_DebugMenu,
+//  &g_DebugMenu,
   &g_ResetMenu,
   NULL
 };
@@ -1590,7 +1590,7 @@ void ResetMenu::Next()
   g_OBD.LcdPrint(0,1,g_YesNoMenuItems[m_CurIdx]);
 }
 
-DebugMenu::DebugMenu()
+/*DebugMenu::DebugMenu()
 {
 	m_Title = g_psDebug;
 }
@@ -1610,7 +1610,7 @@ void DebugMenu::Next()
 	}
 	g_OBD.LcdClearLine(1);
 	g_OBD.LcdPrint(0, 1, g_YesNoMenuItems[m_CurIdx]);
-}
+}*/
 
 #ifdef DELAYTIMER_MENU
 // pluspos = -1 = suppress "+"

@@ -115,7 +115,7 @@ void CustomProcessingClass::readPZEM()
 			
 			if (readedValue != PZEM_NOT_READY_VALUE)
 			{
-				m_eTotal = (long)readedValue;
+				m_eTotal = (long)readedValue * PHASE_COUNT;
 				if (m_eTotal > 0)
 				{
 					if (m_startE == 0)
@@ -161,7 +161,7 @@ void CustomProcessingClass::readPZEM()
 
 			if (readedValue != PZEM_NOT_READY_VALUE)
 			{
-				m_p = (int)readedValue;
+				m_p = (int)readedValue * PHASE_COUNT;
 
 				if (LCD_MAX_CHARS_PER_LINE == 20)
 				{
