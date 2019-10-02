@@ -21,8 +21,8 @@
  */
 #pragma once
 
-#define ARCADIY
-//#define MY_PORTABLE
+//#define ARCADIY
+#define MY_PORTABLE
 
 #ifndef MY_PORTABLE
 #define INVERSE_RELAY_OUTPUT
