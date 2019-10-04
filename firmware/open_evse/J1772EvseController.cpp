@@ -1895,7 +1895,7 @@ uint32_t J1772EVSEController::ReadVoltmeter()
   }
   m_Voltage = ((uint32_t)peak) * ((uint32_t)m_VoltScaleFactor) + m_VoltOffset;*/
 
-	m_Voltage = CustomProcessing.m_v * 1000 + m_VoltOffset;
+	m_Voltage = CustomProcessing.m_v + m_VoltOffset;
   return m_Voltage;
 }
 #endif // VOLTMETER
