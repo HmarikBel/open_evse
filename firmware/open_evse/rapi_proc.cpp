@@ -386,7 +386,7 @@ int EvseRapiProcessor::processCmd()
 #ifdef AMMETER
     case 'A':
       if (tokenCnt == 3) {
-	g_EvseController.SetCurrentScaleFactor(dtou32(tokens[1]));
+//	g_EvseController.SetCurrentScaleFactor(dtou32(tokens[1]));
 	g_EvseController.SetAmmeterCurrentOffset(dtou32(tokens[2]));
 	rc = 0;
       }
@@ -568,37 +568,29 @@ int EvseRapiProcessor::processCmd()
       break;
 #endif // AUTH_LOCK && !AUTH_LOCK_REG
 
-	case '2':
-		sprintf(buffer, "%ld", CustomProcessing.m_eTotal);
-		bufCnt = 1; // flag response text output
-		rc = 0;
-		break;
 	case '5':
-		sprintf(buffer, "%ld", CustomProcessing.m_e);
+		sprintf_P(buffer, PSTR("%ld %ld %d %d %d"), CustomProcessing.m_eTotal, CustomProcessing.m_e, CustomProcessing.m_p,
+			CustomProcessing.m_v, 
+			static_cast<int>(CustomProcessing.m_c * 10));
 		bufCnt = 1; // flag response text output
 		rc = 0;
 		break;
-	case '6':
-		sprintf(buffer, "%d", CustomProcessing.m_p);
-		bufCnt = 1; // flag response text output
-		rc = 0;
-		break;
-	case '7':
-		sprintf(buffer, "%d", CustomProcessing.m_v);
-		bufCnt = 1; // flag response text output
-		rc = 0;
-		break;
-	case '8':
-		sprintf(buffer, "%d", (int)(CustomProcessing.m_c * 10));
-		bufCnt = 1; // flag response text output
-		rc = 0;
-		break;
-	case '9':
-		sprintf(buffer, "%d %d", (int)(CustomProcessing.GetTemperatureInside() * 10), (int)(CustomProcessing.GetTemperatureInsideMax() * 10));
 
+	case '6':
+		sprintf(buffer, PSTR("%d %d %d %d %d %d"), 
+			static_cast<int>(CustomProcessing.m_temperature[0] * 10),
+			static_cast<int>(CustomProcessing.m_temperatureMax[0] * 10),
+			static_cast<int>(CustomProcessing.m_temperature[1] * 10),
+			static_cast<int>(CustomProcessing.m_temperatureMax[1] * 10),
+			static_cast<int>(CustomProcessing.m_temperature[2] * 10),
+			static_cast<int>(CustomProcessing.m_temperatureMax[2] * 10));
+		bufCnt = 1; // flag response text output
+		rc = 0;
+		break;
+	
 #ifdef AMMETER
     case 'A':
-      u1.i = g_EvseController.GetCurrentScaleFactor();
+		u1.i = 1;// g_EvseController.GetCurrentScaleFactor();
       u2.i = g_EvseController.GetAmmeterCurrentOffset();
       sprintf(buffer,"%d %d",u1.i,u2.i);
       bufCnt = 1; // flag response text output
@@ -679,7 +671,7 @@ int EvseRapiProcessor::processCmd()
 #endif // CHARGE_LIMIT
 #ifdef VOLTMETER
     case 'M':
-      u1.i = g_EvseController.GetVoltScaleFactor();
+		u1.i = 1;// g_EvseController.GetVoltScaleFactor();
       u2.i32 = g_EvseController.GetVoltOffset();
       sprintf(buffer,"%d %ld",u1.i,u2.i32);
       bufCnt = 1; // flag response text output

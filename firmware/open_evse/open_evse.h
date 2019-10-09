@@ -142,7 +142,7 @@ extern AutoCurrentCapacityController g_ACCController;
 
 #define VOLTMETER
 #define DEFAULT_VOLT_OFFSET (0)
-#define DEFAULT_VOLT_SCALE_FACTOR (1) 
+//#define DEFAULT_VOLT_SCALE_FACTOR (1) 
 
 #ifdef OPENEVSE_2
 // If the AC voltage is > 150,000 mV, then it's L2. Else, L1.
@@ -455,13 +455,13 @@ extern AutoCurrentCapacityController g_ACCController;
 
 //J1772EVSEController
 
-#define CURRENT_PIN 0 // analog current reading pin ADCx
+//#define CURRENT_PIN 0 // analog current reading pin ADCx
 #define PILOT_PIN 1 // analog pilot voltage reading pin ADCx
 #define PP_PIN 2 // PP_READ - ADC2
 #ifdef VOLTMETER
 // N.B. Note, ADC2 is already used as PP_PIN so beware of potential clashes
 // voltmeter pin is ADC2 on OPENEVSE_2
-#define VOLTMETER_PIN 2 // analog AC Line voltage voltmeter pin ADCx
+//#define VOLTMETER_PIN 2 // analog AC Line voltage voltmeter pin ADCx
 #endif // VOLTMETER
 #ifdef OPENEVSE_2
 // This pin must match the last write to CHARGING_PIN, modulo a delay. If
@@ -476,22 +476,22 @@ extern AutoCurrentCapacityController g_ACCController;
 #else // !OPENEVSE_2
 
  // TEST PIN 1 for L1/L2, ground and stuck relay
-#define ACLINE1_REG &PIND
-#define ACLINE1_IDX 3
+//#define ACLINE1_REG &PIND
+//#define ACLINE1_IDX 3
  // TEST PIN 2 for L1/L2, ground and stuck relay
-#define ACLINE2_REG &PIND
-#define ACLINE2_IDX 4
+//#define ACLINE2_REG &PIND
+//#define ACLINE2_IDX 4
 
 #ifndef RELAY_AUTO_PWM_PIN
 // digital Relay trigger pin
 #define CHARGING_REG &PINB
 #define CHARGING_IDX 0
 // digital Relay trigger pin for second relay
-#define CHARGING2_REG &PIND
-#define CHARGING2_IDX 7
+//#define CHARGING2_REG &PIND
+//#define CHARGING2_IDX 7
 //digital Charging pin for AC relay
-#define CHARGINGAC_REG &PINB
-#define CHARGINGAC_IDX 1
+//#define CHARGINGAC_REG &PINB
+//#define CHARGINGAC_IDX 1
 #endif // !RELAY_AUTO_PWM_PIN
 
 // obsolete LED pin

@@ -36,6 +36,11 @@ const char g_psVoltageEmpty[] PROGMEM = "----";
 const char g_psCurrent[] PROGMEM = "C:";
 const char g_psCurrentUnit[] PROGMEM = "A";
 
+#ifdef MY_PORTABLE
+#define SENSORS_COUNT 2
+#else
+#define SENSORS_COUNT 3
+#endif MY_PORTABLE
 
 class CustomProcessingClass
 {
@@ -49,7 +54,7 @@ class CustomProcessingClass
 	DallasTemperature m_temperatureSensorsReader;
 
 	// arrays to hold device address 
-	DeviceAddress m_insideThermometerAddr;
+	DeviceAddress m_insideThermometerAddr[SENSORS_COUNT];
 
 #ifdef MY_PORTABLE
 	DeviceAddress m_outsideThermometerAddr;
@@ -66,19 +71,20 @@ class CustomProcessingClass
 	unsigned long m_startWaitTemperature;
 	bool m_temperatureRequested;
 
-	bool m_temperatureShownInside;
+	byte m_temperatureToShown;
 	unsigned long m_prevTemperatureShow;
 
 	unsigned long m_startReady;
 
 	float readTemperature(DeviceAddress addr, float prevValue);
 
-	float m_temperatureInside;
-	float m_temperatureOutside;
-	float m_temperatureInsideMax;
-	float m_temperatureOutsideMax;
+
 
  public:
+
+	float m_temperature[3];
+	float m_temperatureMax[3];
+
 	long m_eTotal;
 	long m_e;
 	int m_p;
@@ -105,12 +111,17 @@ class CustomProcessingClass
 
 	float getHigherTemperature() 
 	{
-		if (m_temperatureInside > m_temperatureOutside)
-			return m_temperatureInside;
-		return m_temperatureOutside;
+		float maxTemperature = 0;
+		for (float i : m_temperature)
+		{
+			if (i > maxTemperature)
+				maxTemperature = i;
+		}
+
+		return maxTemperature;
 	}
 
-	void getTemperatureToShow(char* buffer, byte* length);
+	void getTemperatureToShow(char* buffer);
 
 	void checkBackLight();
 
@@ -120,28 +131,14 @@ class CustomProcessingClass
 
 	void printOneWireAddress(byte addr[8]);
 
-	void SetTemperatureInside(float temperature)
+	void SetTemperature(byte index, float temperature)
 	{
-		m_temperatureInside = temperature;
-		if (temperature > m_temperatureInsideMax)
+		m_temperature[index] = temperature;
+		if (temperature > m_temperatureMax[index])
 		{
-			m_temperatureInsideMax = temperature;
+			m_temperatureMax[index] = temperature;
 		}
 	}
-
-	void SetTemperatureOutside(float temperature)
-	{
-		m_temperatureOutside = temperature;
-		if (temperature > m_temperatureOutsideMax)
-		{
-			m_temperatureOutsideMax = temperature;
-		}
-	}
-
-	float GetTemperatureInside() { return m_temperatureInside; }
-	float GetTemperatureOutside() { return m_temperatureOutside; }
-	float GetTemperatureInsideMax() { return m_temperatureInsideMax; }
-	float GetTemperatureOutsideMax() { return m_temperatureOutsideMax; }
 };
 
 extern CustomProcessingClass CustomProcessing;

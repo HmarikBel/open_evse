@@ -25,20 +25,41 @@ void CustomProcessingClass::init()
 	m_outsideThermometerAddr[6] = 0x04;
 	m_outsideThermometerAddr[7] = 0x31;
 #else
-	m_insideThermometerAddr[0] = 0x28;
-	m_insideThermometerAddr[1] = 0xFF;
-	m_insideThermometerAddr[2] = 0xB5;
-	m_insideThermometerAddr[3] = 0x03;
-	m_insideThermometerAddr[4] = 0x61;
-	m_insideThermometerAddr[5] = 0x04;
-	m_insideThermometerAddr[6] = 0x00;
-	m_insideThermometerAddr[7] = 0x68;
+	m_insideThermometerAddr[0][0] = 0x28;
+	m_insideThermometerAddr[0][1] = 0xFF;
+	m_insideThermometerAddr[0][2] = 0xB5;
+	m_insideThermometerAddr[0][3] = 0x03;
+	m_insideThermometerAddr[0][4] = 0x61;
+	m_insideThermometerAddr[0][5] = 0x04;
+	m_insideThermometerAddr[0][6] = 0x00;
+	m_insideThermometerAddr[0][7] = 0x68;
+
+	m_insideThermometerAddr[1][0] = 0x28;
+	m_insideThermometerAddr[1][1] = 0xFF;
+	m_insideThermometerAddr[1][2] = 0xB5;
+	m_insideThermometerAddr[1][3] = 0x03;
+	m_insideThermometerAddr[1][4] = 0x61;
+	m_insideThermometerAddr[1][5] = 0x04;
+	m_insideThermometerAddr[1][6] = 0x00;
+	m_insideThermometerAddr[1][7] = 0x68;
+
+	m_insideThermometerAddr[2][0] = 0x28;
+	m_insideThermometerAddr[2][1] = 0xFF;
+	m_insideThermometerAddr[2][2] = 0xB5;
+	m_insideThermometerAddr[2][3] = 0x03;
+	m_insideThermometerAddr[2][4] = 0x61;
+	m_insideThermometerAddr[2][5] = 0x04;
+	m_insideThermometerAddr[2][6] = 0x00;
+	m_insideThermometerAddr[2][7] = 0x68;
 	
 #endif // MY_PORTABLE
 
 	m_pzem.setAddress(m_pzem_ip);
 
-	m_temperatureSensorsReader.setResolution(m_insideThermometerAddr, 11);
+	for (auto& i : m_insideThermometerAddr)
+	{
+		m_temperatureSensorsReader.setResolution(i, 11);
+	}
 
 	m_prevProcessing = 0;
 	m_prevReadTemperature = 0;
@@ -92,7 +113,8 @@ void CustomProcessingClass::process()
 
 void CustomProcessingClass::readPZEM()
 {
-	float readedValue;
+	float readValue;
+	// ReSharper disable once CppDefaultCaseNotHandledInSwitchStatement
 	switch (m_currentParam)
 	{
 		case 0: 
@@ -102,13 +124,13 @@ void CustomProcessingClass::readPZEM()
 				m_pzem.requestEnergy(m_pzem_ip);
 			}
 
-			readedValue = m_pzem.readEnergy(m_pzem_ip);
+			readValue = m_pzem.readEnergy(m_pzem_ip);
 
-			m_readNext = readedValue != PZEM_NOT_READY_VALUE;
+			m_readNext = readValue != PZEM_NOT_READY_VALUE;
 			
-			if (readedValue != PZEM_NOT_READY_VALUE)
+			if (readValue != PZEM_NOT_READY_VALUE)
 			{
-				m_eTotal = (long)readedValue * PHASE_COUNT;
+				m_eTotal = (long)readValue * PHASE_COUNT;
 				if (m_eTotal > 0)
 				{
 					if (m_startE == 0)
@@ -148,13 +170,13 @@ void CustomProcessingClass::readPZEM()
 				m_pzem.requestPower(m_pzem_ip);
 			}
 
-			readedValue = m_pzem.readPower(m_pzem_ip);
+			readValue = m_pzem.readPower(m_pzem_ip);
 
-			m_readNext = readedValue != PZEM_NOT_READY_VALUE;
+			m_readNext = readValue != PZEM_NOT_READY_VALUE;
 
-			if (readedValue != PZEM_NOT_READY_VALUE)
+			if (readValue != PZEM_NOT_READY_VALUE)
 			{
-				m_p = (int)readedValue * PHASE_COUNT;
+				m_p = static_cast<int>(readValue) * PHASE_COUNT;
 
 				if (LCD_MAX_CHARS_PER_LINE == 20)
 				{
@@ -178,13 +200,13 @@ void CustomProcessingClass::readPZEM()
 				m_pzem.requestVoltage(m_pzem_ip);
 			}
 
-			readedValue = m_pzem.readVoltage(m_pzem_ip);
+			readValue = m_pzem.readVoltage(m_pzem_ip);
 
-			m_readNext = readedValue != PZEM_NOT_READY_VALUE;
+			m_readNext = readValue != PZEM_NOT_READY_VALUE;
 
-			if (readedValue != PZEM_NOT_READY_VALUE)
+			if (readValue != PZEM_NOT_READY_VALUE)
 			{
-				m_v = (int)readedValue;
+				m_v = (int)readValue;
 				/*if (m_v > 150)
 				{
 #ifdef ARCADIY
@@ -215,13 +237,13 @@ void CustomProcessingClass::readPZEM()
 				m_pzem.requestCurrent(m_pzem_ip);
 			}
 
-			readedValue = m_pzem.readCurrent(m_pzem_ip);
+			readValue = m_pzem.readCurrent(m_pzem_ip);
 
-			m_readNext = readedValue != PZEM_NOT_READY_VALUE;
+			m_readNext = readValue != PZEM_NOT_READY_VALUE;
 
-			if (readedValue != PZEM_NOT_READY_VALUE)
+			if (readValue != PZEM_NOT_READY_VALUE)
 			{
-				m_c = readedValue;
+				m_c = readValue;
 
 				if (LCD_MAX_CHARS_PER_LINE == 20)
 				{
@@ -281,11 +303,11 @@ void CustomProcessingClass::readTemperature()
 			return;
 		}
 
-		SetTemperatureInside(readTemperature(m_insideThermometerAddr, m_temperatureInside));
+		for (byte i = 0; i < SENSORS_COUNT; i++)
+		{
+			SetTemperature(i, readTemperature(m_insideThermometerAddr[0], m_temperature[i]));
+		}
 
-#ifdef MY_PORTABLE
-		SetTemperatureOutside(readTemperature(m_outsideThermometerAddr, m_temperatureOutside));
-#endif MY_PORTABLE
 
 		m_temperatureRequested = false;
 	}
@@ -293,7 +315,7 @@ void CustomProcessingClass::readTemperature()
 
 float CustomProcessingClass::readTemperature(DeviceAddress addr, float prevValue)
 {
-	float value = m_temperatureSensorsReader.getTempC(addr);
+	const float value = m_temperatureSensorsReader.getTempC(addr);
 	if (value == DEVICE_DISCONNECTED || (prevValue == 0 && value > 80))
 	{
 		return 0;
@@ -314,7 +336,7 @@ float CustomProcessingClass::readTemperature(DeviceAddress addr, float prevValue
 	return value;
 }
 
-void CustomProcessingClass::getTemperatureToShow(char* buffer, byte* length)
+void CustomProcessingClass::getTemperatureToShow(char* buffer)
 {
 	if (millis() - m_prevTemperatureShow >= CHANGE_ON_UI_TEMPERATURE_INTERVAL)
 	{
@@ -327,20 +349,14 @@ void CustomProcessingClass::getTemperatureToShow(char* buffer, byte* length)
 			m_prevTemperatureShow = millis();
 		}
 
-		m_temperatureShownInside = !m_temperatureShownInside;
+		m_temperatureToShown++;
+		if (m_temperatureToShown >= SENSORS_COUNT)
+		{
+			m_temperatureToShown = 0;
+		}
 	}
-
-#ifndef MY_PORTABLE
-	sprintf(buffer, "%2d.%1dC", (int)m_temperatureInside, ((int)(m_temperatureInside * 10)) % 10);
-
-	*length = 5;
-#else
-	float value = m_temperatureShownInside ? m_temperatureInside : m_temperatureOutside;
-
-	sprintf(buffer, "%s %2d.%1dC", m_temperatureShownInside ? "I" : "O", (int)value, ((int)(value * 10)) % 10);
-
-	*length = 7;
-#endif
+	sprintf(buffer, "%s %2d.%1dC", m_temperatureToShown == 0 ? "I" : m_temperatureToShown == 1 ? "O" : "E",
+		static_cast<int>(m_temperature[m_temperatureToShown]), static_cast<int>(m_temperature[m_temperatureToShown] * 10) % 10);
 }
 
 void CustomProcessingClass::checkBackLight()
@@ -375,7 +391,6 @@ void CustomProcessingClass::searchOneWire()
 {
 	//if (insideThermometerAddr[0] == 0)
 	{
-		char buffer[15];
 		byte addr[8];
 		bool devicesExists = false;
 		while (m_oneWire.search(addr))

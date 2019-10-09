@@ -942,16 +942,16 @@ void J1772EVSEController::Init()
 
 #ifdef AMMETER
   m_AmmeterCurrentOffset = eeprom_read_word((uint16_t*)EOFS_AMMETER_CURR_OFFSET);
-  m_CurrentScaleFactor = eeprom_read_word((uint16_t*)EOFS_CURRENT_SCALE_FACTOR);
+ // m_CurrentScaleFactor = eeprom_read_word((uint16_t*)EOFS_CURRENT_SCALE_FACTOR);
   
   if (m_AmmeterCurrentOffset == (int16_t)0xffff) {
     m_AmmeterCurrentOffset = DEFAULT_AMMETER_CURRENT_OFFSET;
   }
-  if (m_CurrentScaleFactor == (int16_t)0xffff) {
-    m_CurrentScaleFactor = DEFAULT_CURRENT_SCALE_FACTOR;
-  }
+ // if (m_CurrentScaleFactor == (int16_t)0xffff) {
+//    m_CurrentScaleFactor = DEFAULT_CURRENT_SCALE_FACTOR;
+ // }
   
-  m_AmmeterReading = 0;
+//  m_AmmeterReading = 0;
   m_ChargingCurrent = 0;
 #ifdef OVERCURRENT_THRESHOLD
   m_OverCurrentStartMs = 0;
@@ -961,14 +961,14 @@ void J1772EVSEController::Init()
 
 #ifdef VOLTMETER
   m_VoltOffset = eeprom_read_dword((uint32_t*)EOFS_VOLT_OFFSET);
-  m_VoltScaleFactor = eeprom_read_word((uint16_t*)EOFS_VOLT_SCALE_FACTOR);
+//  m_VoltScaleFactor = eeprom_read_word((uint16_t*)EOFS_VOLT_SCALE_FACTOR);
   
   if (m_VoltOffset == 0xffffffff) {
     m_VoltOffset = DEFAULT_VOLT_OFFSET;
   }
-  if (m_VoltScaleFactor == 0xffff) {
-    m_VoltScaleFactor = DEFAULT_VOLT_SCALE_FACTOR;
-  }
+ /// if (m_VoltScaleFactor == 0xffff) {
+ //   m_VoltScaleFactor = DEFAULT_VOLT_SCALE_FACTOR;
+ // }
 #endif // VOLTMETER
 
 #ifndef RGBLCD
@@ -1115,7 +1115,7 @@ void J1772EVSEController::Update(uint8_t forcetransition)
       //    allow 3A slop for ammeter inaccuracy
       if ((phigh >= m_ThreshData.m_ThreshBC)
 #ifdef AMMETER
-	  || (m_AmmeterReading <= 3000)
+	//  || (m_AmmeterReading <= 3000)
 #endif // AMMETER
 	  || ((curms - m_ChargeOffTimeMS) >= 3000)) {
 	chargingOff();
@@ -1631,7 +1631,7 @@ if (TempChkEnabled()) {
   ReadVoltmeter();
 #endif // VOLTMETER
 #ifdef AMMETER
-  if (((m_EvseState == EVSE_STATE_C) && (m_CurrentScaleFactor > 0)) || AmmeterCalEnabled()) {
+  if (((m_EvseState == EVSE_STATE_C) /*&& (m_CurrentScaleFactor > 0)*/) || AmmeterCalEnabled()) {
     
 #ifndef FAKE_CHARGING_CURRENT
     //readAmmeter();
@@ -1880,8 +1880,8 @@ unsigned long J1772EVSEController::GetResetMs()
 #ifdef VOLTMETER
 void J1772EVSEController::SetVoltmeter(uint16_t scale,uint32_t offset)
 {
-  m_VoltScaleFactor = scale;
-  eeprom_write_word((uint16_t*)EOFS_VOLT_SCALE_FACTOR,scale);
+//  m_VoltScaleFactor = scale;
+ // eeprom_write_word((uint16_t*)EOFS_VOLT_SCALE_FACTOR,scale);
   m_VoltOffset = offset;
   eeprom_write_dword((uint32_t*)EOFS_VOLT_OFFSET,offset);
 }

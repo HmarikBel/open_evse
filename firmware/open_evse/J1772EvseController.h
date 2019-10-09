@@ -225,10 +225,10 @@ class J1772EVSEController {
 #endif
 
 #ifdef AMMETER
-  unsigned long m_AmmeterReading;
+ // unsigned long m_AmmeterReading;
   int32_t m_ChargingCurrent;
   int16_t m_AmmeterCurrentOffset;
-  int16_t m_CurrentScaleFactor;
+ // int16_t m_CurrentScaleFactor;
 #ifdef CHARGE_LIMIT
   uint8_t m_chargeLimitkWh; // kWh to extend session
   uint32_t m_chargeLimitTotWs; // total Ws limit
@@ -237,7 +237,7 @@ class J1772EVSEController {
   //void readAmmeter();
 #endif // AMMETER
 #ifdef VOLTMETER
-  uint16_t m_VoltScaleFactor;
+  //uint16_t m_VoltScaleFactor;
   uint32_t m_VoltOffset;
   uint32_t m_Voltage; // mV
 #endif // VOLTMETER
@@ -395,7 +395,7 @@ public:
 #endif // RGBLCD
 
 #ifdef VOLTMETER
-  uint16_t GetVoltScaleFactor() { return m_VoltScaleFactor; }
+ // uint16_t GetVoltScaleFactor() { return m_VoltScaleFactor; }
   uint32_t GetVoltOffset() { return m_VoltOffset; }
   void SetVoltmeter(uint16_t scale,uint32_t offset);
   uint32_t ReadVoltmeter();
@@ -413,15 +413,15 @@ public:
 #endif
 
   int16_t GetAmmeterCurrentOffset() { return m_AmmeterCurrentOffset; }
-  int16_t GetCurrentScaleFactor() { return m_CurrentScaleFactor; }
+ // int16_t GetCurrentScaleFactor() { return m_CurrentScaleFactor; }
   void SetAmmeterCurrentOffset(int16_t offset) {
     m_AmmeterCurrentOffset = offset;
     eeprom_write_word((uint16_t*)EOFS_AMMETER_CURR_OFFSET,offset);
   }
-  void SetCurrentScaleFactor(int16_t scale) {
+  /*void SetCurrentScaleFactor(int16_t scale) {
     m_CurrentScaleFactor = scale;
     eeprom_write_word((uint16_t*)EOFS_CURRENT_SCALE_FACTOR,scale);
-  }
+  }*/
   uint8_t AmmeterCalEnabled() { 
     return (m_bVFlags & ECVF_AMMETER_CAL) ? 1 : 0;
   }
@@ -434,10 +434,10 @@ public:
     }
   }
   void ZeroChargingCurrent() { m_ChargingCurrent = 0; }
-  uint8_t GetInstantaneousChargingAmps() {
+  /*uint8_t GetInstantaneousChargingAmps() {
     //readAmmeter();
     return m_AmmeterReading / 1000;
-  }
+  }*/
 #ifdef CHARGE_LIMIT
   void ClrChargeLimit() { m_chargeLimitTotWs = 0; m_chargeLimitkWh = 0; }
   void SetChargeLimitkWh(uint8_t kwh);

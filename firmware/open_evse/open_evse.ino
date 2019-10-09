@@ -938,8 +938,8 @@ void OnboardDisplay::Update(int8_t updmode)
 	if (TEMPERATURE_DISPLAY_ALWAYS) {
 #ifdef DS18B20
 		byte length;
-		CustomProcessing.getTemperatureToShow(g_sTmp, &length);
-		LcdPrint(LCD_MAX_CHARS_PER_LINE - length, 1, g_sTmp);
+		CustomProcessing.getTemperatureToShow(g_sTmp);
+		LcdPrint(LCD_MAX_CHARS_PER_LINE - 7, 1, g_sTmp);
 	}
 #endif
 #endif
