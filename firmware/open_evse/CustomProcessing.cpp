@@ -33,24 +33,25 @@ void CustomProcessingClass::init()
 	m_insideThermometerAddr[0][5] = 0x04;
 	m_insideThermometerAddr[0][6] = 0x00;
 	m_insideThermometerAddr[0][7] = 0x68;
-
+	// 28FF77A66818032C
 	m_insideThermometerAddr[1][0] = 0x28;
 	m_insideThermometerAddr[1][1] = 0xFF;
-	m_insideThermometerAddr[1][2] = 0xB5;
-	m_insideThermometerAddr[1][3] = 0x03;
-	m_insideThermometerAddr[1][4] = 0x61;
-	m_insideThermometerAddr[1][5] = 0x04;
-	m_insideThermometerAddr[1][6] = 0x00;
-	m_insideThermometerAddr[1][7] = 0x68;
-
+	m_insideThermometerAddr[1][2] = 0x77;
+	m_insideThermometerAddr[1][3] = 0xA6;
+	m_insideThermometerAddr[1][4] = 0x68;
+	m_insideThermometerAddr[1][5] = 0x18;
+	m_insideThermometerAddr[1][6] = 0x03;
+	m_insideThermometerAddr[1][7] = 0x2C;
+	//28FF4EAF681803C8
 	m_insideThermometerAddr[2][0] = 0x28;
 	m_insideThermometerAddr[2][1] = 0xFF;
-	m_insideThermometerAddr[2][2] = 0xB5;
-	m_insideThermometerAddr[2][3] = 0x03;
-	m_insideThermometerAddr[2][4] = 0x61;
-	m_insideThermometerAddr[2][5] = 0x04;
-	m_insideThermometerAddr[2][6] = 0x00;
-	m_insideThermometerAddr[2][7] = 0x68;
+	m_insideThermometerAddr[2][2] = 0x4E;
+	m_insideThermometerAddr[2][3] = 0xAF;
+	m_insideThermometerAddr[2][4] = 0x68;
+	m_insideThermometerAddr[2][5] = 0x18;
+	m_insideThermometerAddr[2][6] = 0x03;
+	m_insideThermometerAddr[2][7] = 0xC8;
+
 	
 #endif // MY_PORTABLE
 
@@ -305,7 +306,7 @@ void CustomProcessingClass::readTemperature()
 
 		for (byte i = 0; i < SENSORS_COUNT; i++)
 		{
-			SetTemperature(i, readTemperature(m_insideThermometerAddr[0], m_temperature[i]));
+			SetTemperature(i, readTemperature(m_insideThermometerAddr[i], m_temperature[i]));
 		}
 
 

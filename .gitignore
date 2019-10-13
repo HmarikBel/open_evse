@@ -174,3 +174,4 @@ pip-log.txt
 .DS_Store
 /firmware/open_evse/__vm/Compile.vmps.xml
 /firmware/open_evse/__vm/Configuration.Release.vmps.xml
+/firmware/open_evse/__vm/Upload.vmps.xml

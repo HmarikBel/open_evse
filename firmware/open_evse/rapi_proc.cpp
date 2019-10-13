@@ -577,12 +577,18 @@ int EvseRapiProcessor::processCmd()
 		break;
 
 	case '6':
-		sprintf(buffer, PSTR("%d %d %d %d %d %d"), 
+		sprintf(buffer, "%d %d %d",
 			static_cast<int>(CustomProcessing.m_temperature[0] * 10),
-			static_cast<int>(CustomProcessing.m_temperatureMax[0] * 10),
 			static_cast<int>(CustomProcessing.m_temperature[1] * 10),
+			static_cast<int>(CustomProcessing.m_temperature[2] * 10));
+		bufCnt = 1; // flag response text output
+		rc = 0;
+		break;
+
+	case '7':
+		sprintf(buffer, "%d %d %d",
+			static_cast<int>(CustomProcessing.m_temperatureMax[0] * 10),
 			static_cast<int>(CustomProcessing.m_temperatureMax[1] * 10),
-			static_cast<int>(CustomProcessing.m_temperature[2] * 10),
 			static_cast<int>(CustomProcessing.m_temperatureMax[2] * 10));
 		bufCnt = 1; // flag response text output
 		rc = 0;
@@ -689,9 +695,9 @@ int EvseRapiProcessor::processCmd()
       break;
 #endif // TEMPERATURE_MONITORING_NY
     case 'P':
-      sprintf(buffer,"%d %d %d",0,//(int)g_TempMonitor.m_DS3231_temperature,
-	      (int)g_TempMonitor.m_MCP9808_temperature,
-	      0//(int)g_TempMonitor.m_TMP007_temperature
+      sprintf(buffer,"%d %d %d", (int)(CustomProcessing.m_temperature[0] * 10),//(int)g_TempMonitor.m_DS3231_temperature,
+		  (int)(CustomProcessing.m_temperature[1] * 10),
+		  (int)(CustomProcessing.m_temperature[2] * 10)//(int)g_TempMonitor.m_TMP007_temperature
 	  );
       /* this is bigger than using sprintf
       strcpy(buffer,u2a(g_TempMonitor.m_DS3231_temperature));

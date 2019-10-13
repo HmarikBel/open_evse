@@ -487,11 +487,11 @@ extern AutoCurrentCapacityController g_ACCController;
 #define CHARGING_REG &PINB
 #define CHARGING_IDX 0
 // digital Relay trigger pin for second relay
-//#define CHARGING2_REG &PIND
-//#define CHARGING2_IDX 7
+#define CHARGING2_REG &PIND
+#define CHARGING2_IDX 7
 //digital Charging pin for AC relay
-//#define CHARGINGAC_REG &PINB
-//#define CHARGINGAC_IDX 1
+#define CHARGINGAC_REG &PINB
+#define CHARGINGAC_IDX 1
 #endif // !RELAY_AUTO_PWM_PIN
 
 // obsolete LED pin

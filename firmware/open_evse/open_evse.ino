@@ -577,11 +577,11 @@ void OnboardDisplay::Update(int8_t updmode)
 	  LcdPrint(LCD_MAX_CHARS_PER_LINE - 6, 0, g_sTmp);
       
 #ifdef KWH_RECORDING 
-      sprintf(g_sTmp,STRF_WH,(g_EnergyMeter.GetSessionWs() / 3600) );
+/*      sprintf(g_sTmp,STRF_WH,(g_EnergyMeter.GetSessionWs() / 3600) );
       LcdPrint(0,1,g_sTmp);
       
       sprintf(g_sTmp,STRF_KWH,(g_EnergyMeter.GetTotkWh() / 1000));  // display accumulated kWh
-      LcdPrint(7,1,g_sTmp);
+      LcdPrint(7,1,g_sTmp);*/
 #endif // KWH_RECORDING
       
 #endif //Adafruit RGB LCD
@@ -619,14 +619,14 @@ void OnboardDisplay::Update(int8_t updmode)
       g_DelayTimer.PrintTimerIcon();
 #endif //#ifdef DELAYTIMER
       LcdPrint_P(g_psEvConnected);
-      LcdPrint(10,0,g_sTmp);
+      LcdPrint(LCD_MAX_CHARS_PER_LINE - 6,0,g_sTmp);
       
 #ifdef KWH_RECORDING
-      sprintf(g_sTmp,STRF_WH,(g_EnergyMeter.GetSessionWs() / 3600) );
+/*      sprintf(g_sTmp,STRF_WH,(g_EnergyMeter.GetSessionWs() / 3600) );
       LcdPrint(0,1,g_sTmp);
       
       sprintf(g_sTmp,STRF_KWH,(g_EnergyMeter.GetTotkWh() / 1000));  // display accumulated kWh
-      LcdPrint(7,1,g_sTmp);
+      LcdPrint(7,1,g_sTmp);*/
 #endif // KWH_RECORDING
       
 #endif //Adafruit RGB LCD
@@ -746,7 +746,7 @@ void OnboardDisplay::Update(int8_t updmode)
       LcdClear();
       LcdSetCursor(0,0);
       LcdPrint_P(g_psDisabled);
-      LcdPrint(10,0,g_sTmp);
+      LcdPrint(LCD_MAX_CHARS_PER_LINE - 6,0,g_sTmp);
 #endif // LCD16X2
       break;
 #ifdef GFI_SELFTEST
@@ -767,7 +767,7 @@ void OnboardDisplay::Update(int8_t updmode)
       LcdClear();
       LcdSetCursor(0,0);
       LcdPrint_P(g_psSleeping);
-      LcdPrint(10,0,g_sTmp);
+      LcdPrint(LCD_MAX_CHARS_PER_LINE - 6,0,g_sTmp);
 #endif // LCD16X2
       break;
     default:
@@ -816,37 +816,37 @@ void OnboardDisplay::Update(int8_t updmode)
 
 #ifdef LCD16X2
 #if defined(AMMETER)
-    if (((curstate == EVSE_STATE_C) || g_EvseController.AmmeterCalEnabled()) && AmmeterIsDirty()) {
-      SetAmmeterDirty(0);
-
-      uint32_t current = g_EvseController.GetChargingCurrent();
-
-#if defined(PP_AUTO_AMPACITY)
-      int a = current / 1000;
-      int ma = (current % 1000) / 100;
-      if (ma >= 5) {
-	a++;
-      }
-      sprintf(g_sTmp,"%d:%dA",a,g_EvseController.GetCurrentCapacity());
-
-      LcdPrint(9,0,"       ");
-      LcdPrint(LCD_MAX_CHARS_PER_LINE-strlen(g_sTmp),0,g_sTmp);
-#else //!PP_AUTO_AMPACITY
-      if (current >= 1000) { // display only if > 1000
-	int a = current / 1000;
-	int ma = (current % 1000) / 100;
-	if (ma > 9) {
-	  ma = 0;
-	  a++;
-	}
-	sprintf(g_sTmp,"%3d.%dA",a,ma);
-      }
-      else {
-	strcpy_P(g_sTmp,PSTR("    0A"));
-      }
-      LcdPrint(10,0,g_sTmp);
-#endif // PP_AUTO_AMPACITY
-    }
+//    if (((curstate == EVSE_STATE_C) || g_EvseController.AmmeterCalEnabled()) && AmmeterIsDirty()) {
+//      SetAmmeterDirty(0);
+//
+//      uint32_t current = g_EvseController.GetChargingCurrent();
+//
+//#if defined(PP_AUTO_AMPACITY)
+//      int a = current / 1000;
+//      int ma = (current % 1000) / 100;
+//      if (ma >= 5) {
+//	a++;
+//      }
+//      sprintf(g_sTmp,"%d:%dA",a,g_EvseController.GetCurrentCapacity());
+//
+//      LcdPrint(9,0,"       ");
+//      LcdPrint(LCD_MAX_CHARS_PER_LINE-strlen(g_sTmp),0,g_sTmp);
+//#else //!PP_AUTO_AMPACITY
+// //     if (current >= 1000) { // display only if > 1000
+//	//int a = current / 1000;
+//	//int ma = (current % 1000) / 100;
+//	//if (ma > 9) {
+//	//  ma = 0;
+//	//  a++;
+//	//}
+//	//sprintf(g_sTmp,"%3d.%dA",a,ma);
+// //     }
+// //     else {
+//	//strcpy_P(g_sTmp,PSTR("    0A"));
+// //     }
+// //     LcdPrint(10,0,g_sTmp);
+//#endif // PP_AUTO_AMPACITY
+//    }
 #endif // AMMETER
 
     if (curstate == EVSE_STATE_C) {
